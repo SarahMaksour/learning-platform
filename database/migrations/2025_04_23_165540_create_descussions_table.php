@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course__unlocks', function (Blueprint $table) {
+        Schema::create('descussions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('content_id')->constrained('course_contents')->cascadeOnDelete();
+            $table->string('message');
             $table->timestamps();
+
         });
     }
 
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course__unlocks');
+        Schema::dropIfExists('descussions');
     }
 };

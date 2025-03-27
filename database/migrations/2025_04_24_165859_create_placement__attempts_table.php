@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('placement__attempts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table->foreignId('quiz_id')->constrained('quizzes')->cascadeOnDelete();
+            $table->integer('score');
+            $table->string('status');
             $table->timestamps();
         });
+
     }
 
     /**
