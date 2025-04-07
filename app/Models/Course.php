@@ -17,6 +17,10 @@ class Course extends Model
         'price',
         'description',
     ];
+
+
+
+
     public function enrollments()
     {
         return $this->hasMany(Enrolment::class);
