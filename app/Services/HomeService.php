@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\Course;
 
 class HomeService
@@ -9,17 +11,19 @@ class HomeService
         return Course::withCount('enrollments')
             ->withAvg('reviews', 'rating')
             ->with('user:id,name')
-            ->where('enrollments_count', '>', 1000)
-            ->orderBy('enrollments_count', 'desc')
+            ->having('enrollments_count', '>', 1000) 
+            ->orderByDesc('enrollments_count')
             ->get(['id', 'title', 'price', 'image', 'user_id']);
     }
-public function getTopRatedCourses(){
+
+    public function getTopRatedCourses()
+    {
         return Course::withCount('enrollments')
-        ->withAvg('reviews','rating')
-            ->withCount('enrollments')
+            ->withAvg('reviews', 'rating')
             ->with('user:id,name')
+            ->having('reviews_avg_rating', '>=', 4.0) 
             ->orderByDesc('reviews_avg_rating')
-            ->where('reviews_avg_rating')
             ->get(['id', 'title', 'price', 'image', 'user_id']);
-}
+    }
+    
 }
