@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\home\HomeController;
 use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseDetailsController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,5 @@ Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
+Route::get('search',[SearchController::class ,'search']);
 });
