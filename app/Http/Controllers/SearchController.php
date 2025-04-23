@@ -20,7 +20,7 @@ class SearchController extends Controller
         }
         $courses=$this->searchservice->getsearch($query);
         return response()->json([
-      'results'=>$courses ,
+      'data'=>$courses ,
         ],200);
     }
 }
