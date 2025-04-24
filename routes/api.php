@@ -11,6 +11,7 @@ use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseReviewsController;
 use App\Http\Controllers\Courses\CourseDetailsController;
 use App\Http\Controllers\Quiz\QuizController;
+use App\Http\Controllers\TeacherDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,5 +43,5 @@ Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'Cour
 //Route::post('/quiz/finalize', [QuizController::class, 'finalizeQuiz']);
 Route::get('/quiz/{id}', [QuizController::class, 'show']);
 Route::post('/quiz/submit', [QuizController::class, 'submit']);
-
+Route::post('/teacherdetail',[TeacherDetailController::class , 'storeDetails']);
 });
