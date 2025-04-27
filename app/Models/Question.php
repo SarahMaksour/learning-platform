@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'option' => 'array',
+    ];
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class);
+    }
+    public function studentAnswers()
+    {
+        return $this->hasMany(Student_Answer::class);
+    }
 }

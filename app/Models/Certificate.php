@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Certificate extends Model
 {
     use HasFactory;
+
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id');
+    }
 }
