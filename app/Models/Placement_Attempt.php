@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course_Unlock extends Model
+class Placement_Attempt extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'user_id',
-       'course_id',
-        'reason'
+    protected $fillable=[
+      'user_id',
+      'course_id',
+      'quiz_id',
+      'score',
+      'status',
     ];
 }

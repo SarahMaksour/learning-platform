@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Student_Answer extends Model
 {
     use HasFactory;
-    public function question()
+    protected $fillable =[
+      'question_id',
+      'user_id' ,
+      'student_answer',
+      'is_correct' ,
+    ];
+public function question()
     {
         return $this->belongsTo(Question::class);
     }
@@ -17,3 +23,5 @@ class Student_Answer extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 }
+
+

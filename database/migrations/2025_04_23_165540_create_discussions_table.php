@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('walleds', function (Blueprint $table) {
+        Schema::create('discussions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('content_id')->constrained('course_contents')->cascadeOnDelete();
+            $table->foreignId('parent_id')->nullable()->constrained('discussions')->cascadeOnDelete();
+            $table->text('message');
             $table->timestamps();
+
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('walleds');
+        Schema::dropIfExists('descussions');
     }
 };

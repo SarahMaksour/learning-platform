@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('course_contents', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        $table->id();
+        $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+        $table->string('title');
+        $table->text('content_path');
+        $table->enum('type',['video','text','pdf']);
+        $table->integer('duration')->nullable();
+        $table->timestamps();
         });
     }
 

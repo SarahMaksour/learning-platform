@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Walled extends Model
 {
     use HasFactory;
-    public function user()
+    protected $fillable =[
+        'user_id',
+        'balance',
+        'created_at',
+        'updated_at'
+    ];
+ public function user()
     {
         return $this->belongsTo(User::class);
     }

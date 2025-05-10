@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     use HasFactory;
-    public function walled()
+    protected $fillable = [
+        'walled_id',
+        'type',
+        'amount',
+        'created_at',
+        'updated_at'
+    ];
+     public function walled()
     {
         return $this->belongsTo(Walled::class);
     }
+
 }
