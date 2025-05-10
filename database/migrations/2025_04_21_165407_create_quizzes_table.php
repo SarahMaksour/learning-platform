@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('content_id')->constrained('course_contents')->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table->enum('type',['lesson','final','unlock'])->default('lesson');
             $table->integer('total_point');
             $table->string('title');
             $table->timestamps();

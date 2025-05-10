@@ -10,7 +10,9 @@ class Quizze extends Model
     use HasFactory;
     protected $fillable=[
         'content_id',
+        'course_id',
         'title',
+        'type',
         'total_point',
         'created_at',
 

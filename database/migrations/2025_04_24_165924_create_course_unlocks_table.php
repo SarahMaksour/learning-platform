@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('placement__attempts', function (Blueprint $table) {
+        Schema::create('course_unlocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
-            $table->foreignId('quiz_id')->constrained('quizzes')->cascadeOnDelete();
-            $table->integer('score');
-            $table->string('status');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('reason');
             $table->timestamps();
         });
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('placement__attempts');
+        Schema::dropIfExists('course_unlocks');
     }
 };
