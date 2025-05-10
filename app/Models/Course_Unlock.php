@@ -11,6 +11,6 @@ class Course_Unlock extends Model
     protected $fillable = [
         'user_id',
        'course_id',
-        'reson'
+        'reason'
     ];
 }

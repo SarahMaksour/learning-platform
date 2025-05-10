@@ -11,7 +11,7 @@ class Placement_Attempt extends Model
     protected $fillable=[
       'user_id',
       'course_id',
-      'quize_id',
+      'quiz_id',
       'score',
       'status',
     ];

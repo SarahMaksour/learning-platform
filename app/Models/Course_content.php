@@ -13,6 +13,8 @@ class Course_content extends Model
         'course_id',
         'title',
         'content-path',
-        'type'
+        'type',
+        'duration'
     ];
+  
 }

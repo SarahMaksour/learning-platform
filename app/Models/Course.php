@@ -13,6 +13,7 @@ class Course extends Model
         'title',
         'level',
         'is_free',
+        'is_popular',
         'price',
         'description',
     ];

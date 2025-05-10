@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('descussions', function (Blueprint $table) {
+        Schema::create('discussions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('content_id')->constrained('course_contents')->cascadeOnDelete();
-            $table->string('message');
+            $table->foreignId('parent_id')->nullable()->constrained('discussions')->cascadeOnDelete();
+            $table->text('message');
             $table->timestamps();
 
         });
