@@ -18,7 +18,7 @@ class CourseResource extends JsonResource
         'id'               => $this->id,
         'title'            => $this->title,
         'price'            => $this->price,
-        'image_url'        => $this->image ? asset('storage/' . $this->image) : null,
+        'image_url'        => $this->image ? asset($this->image) : null,
         'average_rating'   => round($this->reviews_avg_rating ?? 0, 1),
         'ratings_count'    => $this->reviews_count ?? 0,
         'students_count'   => $this->enrollments_count ?? 0,
@@ -26,6 +26,6 @@ class CourseResource extends JsonResource
             'id'   => $this->instructor->id ?? null,
             'name' => $this->instructor->name ?? 'غير معروف',
         ],
-    ];
-    }
+    ];   
+}
 }

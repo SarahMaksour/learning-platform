@@ -14,7 +14,6 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-
         $user =  User::create([
             'name' => $request->name,
             'email' => $request->email,
