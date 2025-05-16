@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\viewAllController;
+use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Auth\AuthController;
 
 use App\Http\Controllers\home\HomeController;

@@ -4,22 +4,23 @@ use App\Models\Course;
 
 class ViewAllService
 {
-    public function getPopularCourses()
+      public function getPopularCourses()
     {
         return Course::withCount('enrollments')
             ->withAvg('reviews', 'rating')
-            ->with('user:id,name')
-            ->where('enrollments_count', '>', 1000)
-            ->orderBy('enrollments_count', 'desc')
+            ->with('instructor:id,name')
+            ->having('enrollments_count', '>', 1000)
+            ->orderByDesc('enrollments_count')
             ->get(['id', 'title', 'price', 'image', 'user_id']);
     }
-public function getTopRatedCourses(){
+
+    public function getTopRatedCourses()
+    {
         return Course::withCount('enrollments')
-        ->withAvg('reviews','rating')
-            ->withCount('enrollments')
-            ->with('user:id,name')
+            ->withAvg('reviews', 'rating')
+            ->with('instructor:id,name')
+            ->having('reviews_avg_rating', '>=', 4.0) 
             ->orderByDesc('reviews_avg_rating')
-            ->where('reviews_avg_rating')
             ->get(['id', 'title', 'price', 'image', 'user_id']);
-}
+    }
 }
