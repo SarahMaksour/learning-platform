@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\viewAllController;
 use App\Http\Controllers\Auth\AuthController;
+
 use App\Http\Controllers\home\HomeController;
 
 /*
@@ -23,5 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('register', [AuthController::class,'register']);
 Route::post('login', [AuthController::class,'login']);
 Route::post('logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
-
-Route::middleware('auth:sanctum')->get('/home', [HomeController::class, 'homePage']);
+Route::middleware('auth:sanctum')->group(function () {
+Route::get('/home', [HomeController::class, 'homePage']);
+Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
+});
