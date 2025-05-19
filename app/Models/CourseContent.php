@@ -13,6 +13,9 @@ class CourseContent extends Model
     {
         return $this->belongsTo(Course::class, 'course_id');
     }
+      public function contentable(){
+        return $this->morphTo();
+    }
     public function quiz()
     {
         return $this->hasOne(Quiz::class);

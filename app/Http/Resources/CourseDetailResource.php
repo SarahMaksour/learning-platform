@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Models\Video;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class CourseDetailResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'price' => $this->price,
+            'reviews_count' => $this->reviews_count,
+            'reviews_avg_rating' => round($this->reviews_avg_rating, 2),
+            'students_count' => $this->enrollments_count,
+            'instructor' => [
+                'name' => $this->instructor->name,
+                'specialization' => $this->instructor->UserDetail->specialization ?? null,
+                'image' => $this->instructor->UserDetail->image ?? null,
+            ],
+            'total_video_duration' => $this->contents
+                ->where('contentable_type', Video::class)
+                ->sum(fn($content) => $content->contentable->duration ?? 0),
+        ];
+    }
+}

@@ -16,5 +16,16 @@ class Course_content extends Model
         'type',
         'duration'
     ];
+      public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+    public function contentable(){
+        return $this->morphTo();
+    }
+    public function quiz()
+    {
+        return $this->hasOne(Quiz::class);
+    }
   
 }

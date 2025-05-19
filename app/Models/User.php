@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\UserDetail;
 use App\Models\PlacementAttempt;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -65,4 +66,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlacementAttempt::class);
     }
+    public function UserDetail()
+{
+    return $this->hasOne(UserDetail::class);
+}
 }

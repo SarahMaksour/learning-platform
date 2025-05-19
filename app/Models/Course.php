@@ -59,6 +59,13 @@ class Course extends Model
 public function instructor()
 {
     return $this->belongsTo(User::class, 'user_id');
-}  
+} 
+public function parent(){
+    return $this->belongsTo(Course::class,'parent_course_id');
+}
+public function children(){
+    return $this->hasMany(Course::class,'parent_course_id');
+}
+
 }
 

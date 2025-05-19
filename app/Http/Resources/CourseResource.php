@@ -19,7 +19,7 @@ class CourseResource extends JsonResource
         'title'            => $this->title,
         'price'            => $this->price,
         'image_url'        => $this->image ? asset($this->image) : null,
-        'average_rating'   => round($this->reviews_avg_rating ?? 0, 1),
+        'average_rating'   => (string) round($this->reviews_avg_rating ?? 0, 2),
         'ratings_count'    => $this->reviews_count ?? 0,
         'students_count'   => $this->enrollments_count ?? 0,
         'instructor'       => [
