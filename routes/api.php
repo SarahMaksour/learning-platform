@@ -34,4 +34,5 @@ Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
+Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseStatus']);
 });
