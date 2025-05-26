@@ -17,4 +17,21 @@ class Quizze extends Model
         'created_at',
 
     ];
+     public function content()
+    {
+        return $this->belongsTo(CourseContent::class);
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+    public function placementAttempts()
+    {
+        return $this->hasMany(PlacementAttempt::class);
+    }
 }
