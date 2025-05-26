@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Courses;
 
 use Illuminate\Http\Request;
 use App\Services\CourseReview;
+use App\Http\Controllers\Controller;
 
 class CourseReviewsController extends Controller
 {

@@ -8,7 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\home\HomeController;
 use App\Http\Controllers\home\viewAllController;
-use App\Http\Controllers\CourseReviewsController;
+use App\Http\Controllers\Courses\CourseReviewsController;
 use App\Http\Controllers\Courses\CourseDetailsController;
 
 /*
@@ -29,7 +29,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('register', [AuthController::class,'register']);
 Route::post('login', [AuthController::class,'login']);
 Route::post('logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
-Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 Route::middleware('auth:sanctum')
 ->group(function () {
 Route::get('/home', [HomeController::class, 'homePage']);
