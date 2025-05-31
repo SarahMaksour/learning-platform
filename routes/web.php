@@ -17,8 +17,3 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/run-seed', function () {
-        set_time_limit(300);
-    Artisan::call('db:seed');
-    return 'Seeder ran!';
-});
