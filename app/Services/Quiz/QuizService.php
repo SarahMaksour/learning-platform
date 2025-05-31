@@ -11,11 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class QuizService
 {
-    public function getQuiz($quiz_id)
+    /*  public function getQuiz($quiz_id)
     {
         $quiz = Quiz::with('questions')->findOrFail($quiz_id);
         return $quiz;
     }
+
 
     public function submitAnswer($id_question, $student_answer)
     {
@@ -62,5 +63,83 @@ class QuizService
             ]
         );
         return $attempt;
+    }*/
+
+    public function getQuestion($quiz_id)
+    {
+        $quiz = Quiz::findOrFail($quiz_id);
+        $questions = Question::where('quiz_id', $quiz_id)->get();
+
+        $formattedQuestions = [];
+        foreach ($questions as $question) {
+            $options = $question->option;
+            $correct_answer = $question->correct_answer;
+            $answers = [];
+            foreach ($options as $key => $value) {
+                $answers[] = [
+                    'answer' => $value,
+                    'is_correct' => ($key == $correct_answer)
+                ];
+            }
+            $formattedQuestions[] = [
+                'question' => $question->text,
+
+                'answer' => $answers,
+            ];
+        }
+        return $formattedQuestions;
     }
+    public function submitQuizAnswer(array $data)
+    {
+        $user_id = Auth::id();
+        $quiz_id = $data['quiz_id'];
+        $answers = $data['answers'];
+        $score = 0;
+        foreach ($answers as $answer) {
+            $question = Question::where('id', $answer['question_id'])
+                ->where('quiz_id', $quiz_id)->first();
+            if (!$question)
+                continue;
+            $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
+
+            if ($isCorrect) {
+                $score += $question->points;
+            }
+
+            StudentAnswer::updateOrCreate(
+                [
+                    'user_id' => $user_id,
+                    'question_id' => $question->id,
+                ],
+                [
+                    'student_answer' => $answer['student_answer'],
+                    'is_correct' => $isCorrect,
+                ]
+            );
+        }
+
+         $totalPossible = Question::where('quiz_id', $quiz_id)->sum('points');
+         $status = ($score >= 60) ? 'passed' : 'failed';
+
+          return [
+         'score' => $score,
+         'status' => $status,
+        ]; 
+    }
+   public function updatePlacementAttempt($quizId, $courseId, $score)
+{
+    $status = $score >= 60 ? 'passed' : 'failed';
+
+    return PlacementAttempt::updateOrCreate(
+        [
+            'user_id' => Auth::id(),
+            'quiz_id' => $quizId,
+            'course_id' => $courseId,
+        ],
+        [
+            'score' => $score,
+            'status' => $status,
+        ]
+    );
+}
 }

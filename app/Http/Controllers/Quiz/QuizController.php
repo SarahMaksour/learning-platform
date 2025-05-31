@@ -15,7 +15,7 @@ class QuizController extends Controller
     {
         $this->quizService = $quizService;
     }
-
+/*
     public function getQuizWithQuestion($id)
     {
         $quiz = $this->quizService->getQuiz($id);
@@ -46,5 +46,17 @@ class QuizController extends Controller
             'score' => $attempt->score,
             'status' => $attempt->status,
         ],201);
+    }*/
+    public function show($id){
+        $data=$this->quizService->getQuestion($id);
+         return response()->json($data);
+    }
+    public function submit(QuizRequest $request){
+        $data=$request->validated();
+        $result=$this->quizService->submitQuizAnswer($data);
+        return response()->json([
+            $result
+        ],201);
+
     }
 }
