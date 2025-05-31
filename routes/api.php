@@ -10,6 +10,7 @@ use App\Http\Controllers\home\HomeController;
 use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseReviewsController;
 use App\Http\Controllers\Courses\CourseDetailsController;
+use App\Http\Controllers\Quiz\QuizController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,4 +37,10 @@ Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
+//Route::get('/quiz/{id}',[QuizController::class,'getQuizWithQuestion']);
+//Route::post('/quiz/submit-answer', [QuizController::class, 'submitAnswer']);
+//Route::post('/quiz/finalize', [QuizController::class, 'finalizeQuiz']);
+Route::get('/quiz/{id}', [QuizController::class, 'show']);
+Route::post('/quiz/submit', [QuizController::class, 'submit']);
+
 });

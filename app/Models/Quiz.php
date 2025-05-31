@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        'content_id',
+        'course_id',
+        'title',
+        'type',
+        'total_point',
+    
+    ];
 
     public function content()
     {
