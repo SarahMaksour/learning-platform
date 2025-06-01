@@ -11,7 +11,6 @@ use App\Http\Controllers\home\HomeController;
 use App\Http\Controllers\Quiz\QuizController;
 use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseDetailsController;
-use App\Http\Controllers\Courses\CourseReviewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +36,7 @@ Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
+Route::get('/filter',[FilterController::class ,'filter']);
 Route::get('search',[SearchController::class ,'search']);
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseStatus']);

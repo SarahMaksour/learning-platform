@@ -14,4 +14,10 @@ class Video extends Model
     {
         return $this->morphOne(CourseContent::class, 'contentable');
     }
+public function course()
+{
+    return $this->belongsTo(Course::class);
+}
+
+
 }

@@ -66,6 +66,11 @@ public function parent(){
 public function children(){
     return $this->hasMany(Course::class,'parent_course_id');
 }
+public function videos()
+{
+    return $this->hasMany(Video::class);
+}
+
 
 }
 
