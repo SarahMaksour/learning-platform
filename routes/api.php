@@ -13,6 +13,7 @@ use App\Http\Controllers\Quiz\QuizController;
 use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseDetailsController;
 use App\Http\Controllers\Courses\CourseReviewsController;
+use App\Http\Controllers\Courses\VideoContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,5 +48,10 @@ Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseSt
 //Route::post('/quiz/finalize', [QuizController::class, 'finalizeQuiz']);
 Route::get('/quiz/{id}', [QuizController::class, 'show']);
 Route::post('/quiz/submit', [QuizController::class, 'submit']);
+Route::prefix('contents')->group(function () {
+    Route::get('{id}', [VideoContentController::class, 'show']);
+    Route::post('{id}/comment', [VideoContentController::class, 'storeComment']);
+    Route::post('comments/{commentId}/reply', [VideoContentController::class, 'storeReply']);
+});
 
 });
