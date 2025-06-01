@@ -13,7 +13,7 @@ class VideoContentService{
     }
     public function addComment($contentId,$userId,$comment){
         $content=CourseContent::findOrFail($contentId);
-        return $content->discussion()->create( [
+        return $content->discussions()->create( [
 'userId'=>$userId,
 'message'=>$comment
 

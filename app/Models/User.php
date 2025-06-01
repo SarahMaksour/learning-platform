@@ -70,4 +70,8 @@ class User extends Authenticatable
 {
     return $this->hasOne(UserDetail::class);
 }
+public function discussions()
+{
+    return $this->hasMany(Discussion::class);
+}
 }

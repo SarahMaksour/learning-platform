@@ -11,8 +11,8 @@ use App\Http\Resources\videoContentResource;
 class VideoContentController extends Controller
 {
     protected $videoService;
-    public function __construct(VideoContentService $videoContentService){
-        $this->videoService=$videoContentService;
+    public function __construct(VideoContentService $videoService){
+        $this->videoService=$videoService;
     }
 public function show($id)
     {
