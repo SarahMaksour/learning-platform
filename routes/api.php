@@ -5,12 +5,14 @@ use App\Services\CourseReview;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 
+use App\Http\Controllers\FilterController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\home\HomeController;
 use App\Http\Controllers\Quiz\QuizController;
 use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseDetailsController;
+use App\Http\Controllers\Courses\CourseReviewsController;
 
 /*
 |--------------------------------------------------------------------------
