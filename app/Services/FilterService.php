@@ -12,7 +12,7 @@ class FilterService
             ->with(['instructor:id,name'])
             ->withAvg('reviews', 'rating')
             ->withCount(['reviews', 'enrollments'])
-            ->withSum('videoContents.contentable as total_video_duration', 'duration');
+            ->withSum('videoContents as total_video_duration', 'contentable.duration');
 
         if ($request->filled('price_min') && $request->filled('price_max')) {
             $query->whereBetween('price', [$request->price_min, $request->price_max]);
