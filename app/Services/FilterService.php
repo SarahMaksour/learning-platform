@@ -33,7 +33,7 @@ class FilterService
                     $totalDuration += $content->contentable->duration;
                 }
             }
-            $course->total_video_duration = $totalDuration;
+            $course->setAttribute('total_video_duration', $totalDuration);
         }
 
         // فلترة على مدة الفيديوهات باستخدام Collection

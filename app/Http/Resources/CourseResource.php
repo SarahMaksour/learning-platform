@@ -25,6 +25,7 @@ class CourseResource extends JsonResource
         'instructor'       => [
             'id'   => $this->instructor->id ?? null,
             'name' => $this->instructor->name ?? 'غير معروف',
+            'total_video_duration_seconds' => $this->total_video_duration ?? 0,
         ],
     ];   
 }
