@@ -70,7 +70,11 @@ public function videos()
 {
     return $this->hasMany(Video::class);
 }
-
+public function videoContents()
+{
+    return $this->hasMany(CourseContent::class)
+        ->where('contentable_type', Video::class);
+}
 
 }
 
