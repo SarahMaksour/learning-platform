@@ -3,38 +3,33 @@ namespace App\Services;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
-use Termwind\Components\Raw;
-use Illuminate\Support\Facades\DB;
 
 class FilterService
 {
-    public function filterCourses(Request $request){
-        $query = Course::select('courses.*')
-            ->leftJoin('videos', 'courses.id', '=', 'videos.course_id')
-            ->groupBy('courses.id');
-    if ($request->filled('price_min') && $request->filled('price_max')) {
-            $query->whereBetween('courses.price', [$request->price_min, $request->price_max]);
+    public function filterCourses(Request $request)
+    {
+        $query = Course::query()
+            ->with(['videos', 'reviews']) // تحميل العلاقات
+            ->withSum('videos', 'duration') // مجموع مدة الفيديوهات
+            ->withAvg('reviews', 'rating'); // متوسط التقييم
+
+        // فلترة السعر
+        if ($request->filled('price_min') && $request->filled('price_max')) {
+            $query->whereBetween('price', [$request->price_min, $request->price_max]);
         }
 
-    if ($request->filled('rating')) {
-    $query->whereHas('reviews', function ($q) use ($request) {
-        $q->select(DB::raw('AVG(rating) as avg_rating'))
-            ->groupBy('course_id')
-            ->havingRaw('AVG(rating) >= ?', [$request->rating]);
-    });
-   
+        // فلترة التقييم
+        if ($request->filled('rating')) {
+            $query->having('reviews_avg_rating', '>=', $request->rating);
         }
-        
-   if($request->filled('duration_min')&&$request->filled('duration_max')){
-    $durationMin = $request->duration_min * 60;
-    $durationMax = $request->duration_max * 60;
-    $query->havingRaw('SUM(videos.duration) BETWEEN ? AND ?', [
-        $durationMin,
-        $durationMax,
-    ]);
-   }
 
-   $query->with('reviews','videos');
-   return $query->get();
+        // فلترة المدة
+        if ($request->filled('duration_min') && $request->filled('duration_max')) {
+            $min = $request->duration_min * 60;
+            $max = $request->duration_max * 60;
+            $query->havingRaw('videos_sum_duration BETWEEN ? AND ?', [$min, $max]);
+        }
+
+        return $query->get();
     }
 }
