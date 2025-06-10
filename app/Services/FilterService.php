@@ -8,27 +8,45 @@ class FilterService
 {
    public function filterCourses(Request $request)
     {
-        $query = Course::query()
-            ->with(['instructor:id,name'])
+        // جلب الكورسات مع العلاقات اللازمة
+        $query = Course::with(['contents.contentable', 'instructor:id,name', 'reviews', 'enrollments'])
             ->withAvg('reviews', 'rating')
-            ->withCount(['reviews', 'enrollments'])
-            ->withSum('videoContents as total_video_duration', 'contentable.duration');
+            ->withCount(['reviews', 'enrollments']);
 
+        // فلترة السعر
         if ($request->filled('price_min') && $request->filled('price_max')) {
             $query->whereBetween('price', [$request->price_min, $request->price_max]);
         }
 
+        // فلترة التقييم
         if ($request->filled('rating')) {
             $query->having('reviews_avg_rating', '>=', $request->rating);
         }
 
+        $courses = $query->get(['id', 'title', 'price', 'image', 'user_id']);
+
+        // حساب مدة الفيديوهات يدويًا
+        foreach ($courses as $course) {
+            $totalDuration = 0;
+            foreach ($course->contents as $content) {
+                if ($content->contentable_type === \App\Models\Video::class && $content->contentable) {
+                    $totalDuration += $content->contentable->duration;
+                }
+            }
+            $course->total_video_duration = $totalDuration;
+        }
+
+        // فلترة على مدة الفيديوهات باستخدام Collection
         if ($request->filled('duration_min') && $request->filled('duration_max')) {
             $min = $request->duration_min * 60;
             $max = $request->duration_max * 60;
-            $query->havingRaw('total_video_duration BETWEEN ? AND ?', [$min, $max]);
+
+            $courses = $courses->filter(function ($course) use ($min, $max) {
+                return $course->total_video_duration >= $min && $course->total_video_duration <= $max;
+            })->values();
         }
 
-        return $query->get(['id', 'title', 'price', 'image', 'user_id']);
+        return $courses;
     }
-}
 
+}
