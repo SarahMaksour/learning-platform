@@ -15,9 +15,9 @@ class videoContentResource extends JsonResource
     public function toArray(Request $request): array
     {
       return [
-        'title'=>$this->contntable->title,
-        'description'=>$this->contentable->description,
-        'video_url'=>asset('storage/' . $this->contentable->video_path),
+       'title'=>$this->contentable->title,
+      //  'description'=>$this->contentable->description,
+        'video_url'=>asset('/' . $this->contentable->video_path),
          'download_url' => asset('storage/' . $this->contentable->video_path),
         'comments' =>DiscussionVideoResource::collection($this->discussions),
       ];
