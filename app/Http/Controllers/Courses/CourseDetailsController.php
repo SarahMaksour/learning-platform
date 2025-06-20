@@ -19,7 +19,7 @@ class CourseDetailsController extends Controller
     }
     public function getAboutCourse($id)
     {
-       dd($this->courseService);
+
         $courseDetail = $this->courseService->getAboutCourse($id);
         return response()->json([
             'courseDetail' => new CourseDetailResource($courseDetail)
