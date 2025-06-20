@@ -28,6 +28,7 @@ class CourseDetailResource extends JsonResource
                 'name' => $this->instructor->name,
                 'specialization' => $this->instructor->UserDetail->specialization ?? null,
                 'image' => $this->instructor->UserDetail->image ?? null,
+                'bio'=>$this->instructor->UserDetail->bio
             ],
             'total_video_duration' => $this->contents
                 ->where('contentable_type', Video::class)
