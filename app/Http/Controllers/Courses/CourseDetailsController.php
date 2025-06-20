@@ -14,11 +14,12 @@ class CourseDetailsController extends Controller
     protected $courseService, $coursePurchaseService;
     public function __construct(CourseService $courseService, CoursePurchaseService $coursePurchaseService)
     {
-        $this->coursePurchaseService = $coursePurchaseService;
+        $this->courseService = $courseService;
         $this->coursePurchaseService = $coursePurchaseService;
     }
     public function getAboutCourse($id)
     {
+       dd($this->courseService);
         $courseDetail = $this->courseService->getAboutCourse($id);
         return response()->json([
             'courseDetail' => new CourseDetailResource($courseDetail)
