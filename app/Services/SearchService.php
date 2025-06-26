@@ -8,11 +8,11 @@ class SearchService
 {
  public function getsearch(string $query)
  {
-  return Course::where('title','like','%{$query}%')
-                ->orwhere('description', 'like', '%{$query}%')
-                ->get();
 
- }
+        return Course::where('title', 'like', "%$query%")
+                     ->orWhere('description', 'like', "%$query%")
+                     ->get();
+    }
 
 
 

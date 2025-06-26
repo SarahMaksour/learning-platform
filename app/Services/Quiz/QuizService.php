@@ -83,7 +83,6 @@ class QuizService
             }
             $formattedQuestions[] = [
                 'question' => $question->text,
-
                 'answer' => $answers,
             ];
         }
