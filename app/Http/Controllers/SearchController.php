@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SearchService;
 use Illuminate\Http\Request;
+use App\Services\SearchService;
+use App\Http\Resources\CourseResource;
 
 class SearchController extends Controller
 {
@@ -21,7 +22,7 @@ class SearchController extends Controller
         $courses=$this->searchservice->getsearch($query);
       
         return response()->json([
-      'data'=>$courses ,
+      'data'=>CourseResource::collection($courses ),
         ],200);
     }
 }
