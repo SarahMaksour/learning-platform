@@ -17,6 +17,8 @@ class DiscussionReplyResource extends JsonResource
         return [
             "id"=>$this->id,
             "user"=>$this->user->name,
+            "image"=>$this->user->UserDetail->image,
+            "specialization"=>$this->user->UserDetail->specialization,
             "message"=>$this->message
         ];
     }
