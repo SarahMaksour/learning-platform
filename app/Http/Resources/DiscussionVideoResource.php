@@ -18,7 +18,9 @@ class DiscussionVideoResource extends JsonResource
             'id' => $this->id,
             'user' => $this->user->name,
             'message' => $this->message,
-           // 'created_at' => $this->created_at->diffForHumans(),
+      "image"=>$this->user->UserDetail->image,
+            "specialization"=>$this->user->UserDetail->specialization,
+        
             'replies' => DiscussionVideoResource::collection($this->replies),
         ];
     }
