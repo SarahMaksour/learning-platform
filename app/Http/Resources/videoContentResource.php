@@ -19,6 +19,6 @@ class videoContentResource extends JsonResource
        'description'=>$this->contentable->description,
         'video_url'=>asset( $this->contentable->video_path),
          'download_url' => asset( $this->contentable->video_path),
-      'comments' => DiscussionVideoResource::collection($this->discussions),     ];
+      'comments' => DiscussionVideoResource::collection($this->discussions->whereNull('parent_id')),     ];
     }
 }
