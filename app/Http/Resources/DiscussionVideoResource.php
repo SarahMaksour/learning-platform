@@ -21,7 +21,7 @@ class DiscussionVideoResource extends JsonResource
       "image"=>$this->user->UserDetail->image,
             "specialization"=>$this->user->UserDetail->specialization,
         
-            'replies' => DiscussionVideoResource::collection($this->replies),
+            'replies' => DiscussionReplyResource::collection($this->replies),
         ];
     }
 }
