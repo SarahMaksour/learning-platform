@@ -17,8 +17,8 @@ class videoContentResource extends JsonResource
       return [
        'title'=>$this->contentable->title,
        'description'=>$this->contentable->description,
-        'video_url'=>asset('/' . $this->contentable->video_path),
-         'download_url' => asset('storage/' . $this->contentable->video_path),
+        'video_url'=>asset( $this->contentable->video_path),
+         'download_url' => asset( $this->contentable->video_path),
         'replies' =>$this->replies?DiscussionReplyResource::collection($this->replies):[],
       ];
     }
