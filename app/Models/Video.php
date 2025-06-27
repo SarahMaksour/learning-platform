@@ -10,6 +10,8 @@ class Video extends Model
     use HasFactory;
      protected $fillable = ['title', 'video_path', 'duration'];
 
+protected $hidden = ['courseContent'];
+
     public function courseContent()
     {
         return $this->morphOne(CourseContent::class, 'contentable');
