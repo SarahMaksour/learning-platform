@@ -11,7 +11,6 @@ class Video extends Model
      protected $fillable = ['title', 'video_path', 'duration','description'];
 
 protected $hidden = ['courseContent'];
-
     public function courseContent()
     {
         return $this->morphOne(CourseContent::class, 'contentable');

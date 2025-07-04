@@ -18,7 +18,7 @@ class DiscussionVideoResource extends JsonResource
             'id' => $this->id,
             'user' => $this->user->name,
             'message' => $this->message,
-            "image"=>asset($this->user->UserDetail->image),
+            "image"=>$this->user->UserDetail->image?asset($this->user->UserDetail->image):null,
             "specialization"=>$this->user->UserDetail->specialization,
             'replies' => DiscussionReplyResource::collection($this->replies),
         ];
