@@ -14,12 +14,13 @@ class DiscussionReplyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $userDetail=optional($this->user->UserDetail);
         return [
             "id"=>$this->id,
             "user"=>$this->user->name,
-            "image"=>asset($this->user->UserDetail->image),
-            "specialization"=>$this->user->UserDetail->specialization,
-            "message"=>$this->message
+           'image' => $userDetail->image ? asset($userDetail->image) : null,
+            'specialization' => $userDetail->specialization,
+             "message"=>$this->message
         ];
     }
 }
