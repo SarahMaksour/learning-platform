@@ -19,7 +19,7 @@ class DiscussionVideoResource extends JsonResource
             'user' => $this->user->name,
             'message' => $this->message,
 "image" => optional($this->user->UserDetail)->image ? asset(optional($this->user->UserDetail)->image) : null,
-            "specialization"=>$this->user->UserDetail->specialization,
+            "specialization"=>optional($this->user->UserDetail->specialization),
             'replies' => DiscussionReplyResource::collection($this->replies),
         ];
     }
