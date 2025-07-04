@@ -14,12 +14,13 @@ class DiscussionVideoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $userDetail = optional($this->user->UserDetail);
         return  [
             'id' => $this->id,
             'user' => $this->user->name,
             'message' => $this->message,
-            "image"=>asset($this->user->UserDetail->image),
-            "specialization"=>$this->user->UserDetail->specialization,
+            'image' => $userDetail->image ? asset($userDetail->image) : null,
+            'specialization' => $userDetail->specialization,
             'replies' => DiscussionReplyResource::collection($this->replies),
         ];
     }
