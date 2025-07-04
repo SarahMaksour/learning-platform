@@ -14,4 +14,21 @@ class Discussion extends Model
         'parent_id',
         'message'
     ];
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
+public function replies()
+{
+    return $this->hasMany(self::class, 'parent_id');
+}
+public function parent()
+{
+    return $this->belongsTo(self::class, 'parent_id');
+}
+public function content()
+{
+    return $this->belongsTo(CourseContent::class, 'content_id');
+}
+
 }

@@ -10,10 +10,14 @@ class CourseContent extends Model
     use HasFactory;
  protected $fillable = [
 
-        'course_id',
-        ' contentable',
-     
+   'course_id',
+    'contentable_type',
+    'contentable_id',
     ];
+    public function discussions()
+{
+    return $this->hasMany(Discussion::class, 'content_id');
+}
     public function course()
     {
         return $this->belongsTo(Course::class, 'course_id');
