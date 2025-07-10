@@ -15,6 +15,7 @@ use App\Http\Controllers\Courses\CourseDetailsController;
 use App\Http\Controllers\Courses\CourseReviewsController;
 use App\Http\Controllers\Courses\VideoContentController;
 use App\Http\Controllers\myProfile\myProfileController;
+use App\Http\Controllers\wallet\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +56,6 @@ Route::prefix('contents')->group(function () {
     Route::post('comments/{commentId}/reply', [VideoContentController::class, 'storeReply']);
 });
 Route::get('myProfile',[myProfileController::class,'show']);
+
+Route::post('wallet/recharge',[WalletController::class,'recharge']);
 });
