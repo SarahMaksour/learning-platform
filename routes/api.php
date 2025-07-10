@@ -14,6 +14,7 @@ use App\Http\Controllers\home\viewAllController;
 use App\Http\Controllers\Courses\CourseDetailsController;
 use App\Http\Controllers\Courses\CourseReviewsController;
 use App\Http\Controllers\Courses\VideoContentController;
+use App\Http\Controllers\myProfile\myProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,5 +54,5 @@ Route::prefix('contents')->group(function () {
     Route::post('{id}/comment', [VideoContentController::class, 'storeComment']);
     Route::post('comments/{commentId}/reply', [VideoContentController::class, 'storeReply']);
 });
-
+Route::get('myProfile',[myProfileController::class,'show']);
 });
