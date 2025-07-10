@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\wallet;
 
-use Services\WalletService;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
