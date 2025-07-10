@@ -1,16 +1,17 @@
 <?php
 namespace App\Services;
-use App\Models\Transaction;
 use App\Models\Walled;
+use App\Models\Wallet;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 
 class WalletService{
     public function recharge($user,$amount){
         return DB::transaction(function () use ($user,$amount){
-            $wallet=Walled::firstOrCreate(['user_id'=>$user->id]);
+            $wallet=Wallet::firstOrCreate(['user_id'=>$user->id]);
             $wallet->increment('balance',$amount);
             Transaction::create([
-                'walled_id'=>$wallet->id,
+                'wallet_id'=>$wallet->id,
                 'amount'=>$amount,
                 'type'=>'credit'
             ]);
