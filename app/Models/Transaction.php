@@ -17,7 +17,7 @@ class Transaction extends Model
     ];
      public function walled()
     {
-        return $this->belongsTo(Walled::class);
+        return $this->belongsTo(Wallet::class);
     }
 
 }
