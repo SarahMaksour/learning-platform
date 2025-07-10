@@ -1,8 +1,6 @@
 <?php
-namespace Services;
-
+namespace App\Services;
 use App\Models\Transaction;
-use App\Services;
 use App\Models\Walled;
 use Illuminate\Support\Facades\DB;
 
