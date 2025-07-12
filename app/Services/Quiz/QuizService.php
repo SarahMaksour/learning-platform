@@ -81,7 +81,7 @@ class QuizService
                     'is_correct' => ($key == $correct_answer)
                 ];
             }
-            $formattedQuestions[] = [
+            $formattedQuestions["question_" . ($question + 1)] = [
                 'question' => $question->text,
                 'answer' => $answers,
             ];
