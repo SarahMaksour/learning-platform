@@ -71,7 +71,7 @@ class QuizService
         $questions = Question::where('quiz_id', $quiz_id)->get();
 
         $formattedQuestions = [];
-        foreach ($questions as $question) {
+        foreach ($questions as $index => $question) {
             $options = $question->option;
             $correct_answer = $question->correct_answer;
             $answers = [];
@@ -81,7 +81,7 @@ class QuizService
                     'is_correct' => ($key == $correct_answer)
                 ];
             }
-            $formattedQuestions["question_" . ($question + 1)] = [
+            $formattedQuestions["question_" . ($index + 1)] = [
                 'question' => $question->text,
                 'answer' => $answers,
             ];
