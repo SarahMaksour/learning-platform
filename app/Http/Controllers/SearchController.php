@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Services\SearchService;
 use App\Http\Resources\CourseResource;
@@ -19,8 +20,9 @@ class SearchController extends Controller
           'message'=>'يرجى إدخال كلمة البحث'
             ],400);
         }
-        $courses=$this->searchservice->getsearch($query);
-      
+        $courses = Course::search($query)->paginate(10);
+
+ 
         return response()->json([
       'data'=>CourseResource::collection($courses ),
         ],200);
