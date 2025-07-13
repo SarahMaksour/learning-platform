@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Quiz;
 
+use App\Models\Quiz;
 use Illuminate\Http\Request;
+use App\Http\Requests\QuizRequest;
 use App\Services\Quiz\QuizService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\QuizRequest;
 use App\Http\Resources\ShowQuizResource;
 
 class QuizController extends Controller
@@ -47,8 +48,9 @@ class QuizController extends Controller
             'status' => $attempt->status,
         ],201);
     }*/
-    public function show($id){
-        $data=$this->quizService->getQuestion($id);
+    public function show($content_id){
+            $quiz = Quiz::where('content_id', $content_id)->firstOrFail();
+        $data=$this->quizService->getQuestion($quiz->id);
          return response()->json($data);
     }
     public function submit(QuizRequest $request){
