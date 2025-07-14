@@ -31,13 +31,13 @@ class SearchController extends Controller
     }*/
         public function search(Request $request)
 {
-    $search = $request->input('search');
+    $q = $request->input('q');
 
-    if (empty($search)) {
+    if (empty($q)) {
         return response()->json(['message' => 'يرجى إدخال كلمة البحث'], 400);
     }
 
-    $results = Course::search($search)->get();
+    $results = Course::search($q)->get();
 
     return response()->json([
         'data' => CourseResource::collection($results),
