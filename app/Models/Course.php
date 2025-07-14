@@ -8,7 +8,7 @@ use Laravel\Scout\Searchable;
 
 class Course extends Model
 {
-    use HasFactory;
+    use HasFactory,Searchable;
     protected $fillable = [
         'user_id',
         'title',

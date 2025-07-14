@@ -18,11 +18,12 @@ return [
 
     //'driver' => env('SCOUT_DRIVER', 'algolia'),
 'driver' => env('SCOUT_DRIVER', 'tntsearch'),
+
 'tntsearch' => [
-    'storage'  => storage_path(), // مكان تخزين الملفات المؤقتة
-    'fuzziness' => true,          // تطابق الكلمات المشابهة
-    'asYouType' => true,          // بحث لحظي
-    'searchBoolean' => true,      // دعم الكلمات المتعددة
+    'storage'  => storage_path(), // مكان تخزين الفهرس
+    'fuzziness' => true,
+    'asYouType' => true,
+    'searchBoolean' => true,
 ],
     /*
     |--------------------------------------------------------------------------
