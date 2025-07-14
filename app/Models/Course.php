@@ -18,7 +18,16 @@ class Course extends Model
         'price',
         'description',
     ];
+  protected static function booted()
+    {
+        static::saved(function ($course) {
+            $course->searchable();  // يضيف أو يحدث الفهرس للكورس اللي اتخزن
+        });
 
+        static::deleted(function ($course) {
+            $course->unsearchable(); // يحذف من الفهرس لو اتشال الكورس
+        });
+    }
 public function searchableAs()
 {
     return 'courses';
