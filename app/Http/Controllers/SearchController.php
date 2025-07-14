@@ -13,16 +13,13 @@ class SearchController extends Controller
     public function __construct(SearchService $searchservice){
         $this->searchservice=$searchservice;
     }
-    public function search(Request $request){
-        $query=$request->input('q');
-        if(!$query){
-            return response()->json([
-          'message'=>'يرجى إدخال كلمة البحث'
-            ],400);
-        }
-        $courses = Course::search($query)->paginate(10);
-
- 
+     public function search(Request $request){
+        $search=$request->search;
+        $courses=Course::where(function($query) use ($search){
+          $query->where('title','like',"%$search%")
+          ->orWhere('description','like',"%$search%");
+        })->get();
+        
         return response()->json([
       'data'=>CourseResource::collection($courses ),
         ],200);

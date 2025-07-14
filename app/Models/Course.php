@@ -8,7 +8,7 @@ use Laravel\Scout\Searchable;
 
 class Course extends Model
 {
-    use HasFactory,Searchable;
+    use HasFactory;
     protected $fillable = [
         'user_id',
         'title',
@@ -19,7 +19,7 @@ class Course extends Model
         'description',
     ];
 
-public function searchableAs()
+/*public function searchableAs()
 {
     return 'courses';
 }
@@ -31,7 +31,7 @@ public function searchableAs()
             'description' => $this->description,
         ];
     }
-
+*/
     public function enrollments()
     {
         return $this->hasMany(Enrolment::class);
