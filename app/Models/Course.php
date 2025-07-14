@@ -19,7 +19,10 @@ class Course extends Model
         'description',
     ];
 
-
+public function searchableAs()
+{
+    return 'courses';
+}
  public function toSearchableArray()
     {
         return [
