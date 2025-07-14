@@ -19,7 +19,7 @@ class Course extends Model
         'description',
     ];
 
-/*public function searchableAs()
+public function searchableAs()
 {
     return 'courses';
 }
@@ -31,7 +31,7 @@ class Course extends Model
             'description' => $this->description,
         ];
     }
-*/
+
     public function enrollments()
     {
         return $this->hasMany(Enrolment::class);
