@@ -56,9 +56,9 @@ class QuizController extends Controller
     public function submit(QuizRequest $request){
         $data=$request->validated();
         $result=$this->quizService->submitQuizAnswer($data);
-        return response()->json([
+        return response()->json(
             $result
-        ],201);
+        ,201);
 
     }
 }
