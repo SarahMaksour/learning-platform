@@ -38,9 +38,15 @@ class SearchController extends Controller
     }
 
     $results = Course::search($q)->get();
+ // فلترة دقيقة بعد TNTSearch
+    $filtered = $results->filter(function ($course) use ($q) {
+        $qLower = mb_strtolower($q);
+        return str_contains(mb_strtolower($course->title), $qLower)
+         ; 
+         });
 
     return response()->json([
-        'data' => CourseResource::collection($results),
+        'data' => CourseResource::collection( $filtered ),
     ]);
 }
 
