@@ -122,7 +122,7 @@ class QuizService
         }
 
          $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
-         $score=$totalQuestion > 0 ? ($answerCount / $totalQuestion) * 100 : 0;
+$score = $totalQuestion > 0 ? round(($answerCount / $totalQuestion) * 100, 2) : 0;
          $status = ($score >= 60) ? 'passed' : 'failed';
 
           return [
