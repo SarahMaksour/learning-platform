@@ -97,7 +97,8 @@ class QuizService
         $user_id = Auth::id();
         $quiz_id = $data['quiz_id'];
         $answers = $data['answers'];
-        $answerCount = 0;
+        $correctCount = 0;
+        $incorrectCount=0;
         foreach ($answers as $answer) {
             $question = Question::where('id', $answer['question_id'])
                 ->where('quiz_id', $quiz_id)->first();
@@ -106,7 +107,11 @@ class QuizService
             $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
 
             if ($isCorrect) {
-               $answerCount ++;
+               $correctCount ++;
+            }
+            else
+            {
+                $incorrectCount++;
             }
 
             StudentAnswer::updateOrCreate(
@@ -122,12 +127,14 @@ class QuizService
         }
 
          $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
-$score = $totalQuestion > 0 ? round(($answerCount / $totalQuestion) * 100, 2) : 0;
+$score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
          $status = ($score >= 60) ? 'passed' : 'failed';
 
           return [
          'score' => $score,
          'status' => $status,
+         'correctCount'=>$correctCount,
+         'incorrectCount'=>$incorrectCount
         ]; 
     }
    public function updatePlacementAttempt($quizId, $courseId, $score)
