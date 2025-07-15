@@ -41,7 +41,7 @@ class SearchController extends Controller
  // فلترة دقيقة بعد TNTSearch
     $filtered = $results->filter(function ($course) use ($q) {
         $qLower = mb_strtolower($q);
-        return str_contains(mb_strtolower($course->title), $qLower)
+        return str_contains(mb_strtolower($course->title), $qLower)!== false
          ; 
          });
 
