@@ -19,15 +19,9 @@ class WalletController extends Controller
         $user_id=Auth()->user()->id;
         $wallet=Wallet::where('user_id', $user_id)->first();
 
-        if (!$wallet) {
-        return response()->json([
-            'message' => 'no wallet for this user'
-        ], 404);
-    }
-
          return response()->json([
             'message' => 'get balance successfully',
-            'balance' => $wallet->balance
+            'balance' => optional($wallet)->balance??0
 ]);
 
     }
