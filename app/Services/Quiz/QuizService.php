@@ -97,7 +97,7 @@ class QuizService
         $user_id = Auth::id();
         $quiz_id = $data['quiz_id'];
         $answers = $data['answers'];
-        $score = 0;
+        $answerCount = 0;
         foreach ($answers as $answer) {
             $question = Question::where('id', $answer['question_id'])
                 ->where('quiz_id', $quiz_id)->first();
@@ -106,7 +106,7 @@ class QuizService
             $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
 
             if ($isCorrect) {
-                $score += $question->points;
+               $answerCount ++;
             }
 
             StudentAnswer::updateOrCreate(
@@ -121,7 +121,8 @@ class QuizService
             );
         }
 
-         $totalPossible = Question::where('quiz_id', $quiz_id)->sum('points');
+         $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
+         $score=$totalQuestion > 0 ? ($answerCount / $totalQuestion) * 100 : 0;
          $status = ($score >= 60) ? 'passed' : 'failed';
 
           return [
