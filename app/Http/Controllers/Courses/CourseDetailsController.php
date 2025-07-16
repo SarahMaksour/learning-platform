@@ -58,7 +58,6 @@ class CourseDetailsController extends Controller
     public function PayTheCourse(Course $course){
 $course_id=$course->id;
         $message=$this->courseService->enrollUserInCourseWithPayment($course_id);
-        return response()->json($message,200
-        );
+        return $message;
     }
 }
