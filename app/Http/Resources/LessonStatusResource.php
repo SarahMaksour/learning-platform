@@ -14,12 +14,12 @@ class LessonStatusResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-       return [
+        return [
             'lesson_id' => $this->id,
-            'lesson_name' => $this->title,
-            'duration' => $this->duration,
-            'video_number' => $this->video_number,
-            'is_paid' => $this->is_paid, 
+            'lesson_name' => optional($this->contentable)->title,
+            'duration' => optional($this->contentable)->duration,
+            'video_number' => optional($this->contentable)->video_number,
+            'is_paid' => $this->is_paid,
             'is_previous_lesson_passed' => $this->is_previous_lesson_passed,
         ];
     }

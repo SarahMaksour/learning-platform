@@ -37,23 +37,20 @@ class CourseDetailsController extends Controller
         $unlock = false;
         foreach ($lessons as $index => $lesson) {
             $lesson->is_paid = $isPaid;
-        $lesson->is_previous_lesson_passed = false;
-            
-            if ($isPaid) {
-        
-            if ($index === 0) {
-                      $unlock = true;
-            } else {
-                 $previousLesson = $lessons[$index - 1];
-                 $unlock = $previousLesson->isPassedByUser($user);
-            }
+            $lesson->is_previous_lesson_passed = false;
 
-            $lesson->is_previous_lesson_passed = $unlock;
+            if ($isPaid) {
+
+                if ($index === 0) {
+                    $unlock = true;
+                } else {
+                    $previousLesson = $lessons[$index - 1];
+                    $unlock = $previousLesson->isPassedByUser($user);
+                }
+
+                $lesson->is_previous_lesson_passed = $unlock;
             }
         }
-
-    
- return LessonStatusResource::collection($lessons);
+        return LessonStatusResource::collection($lessons);
     }
-
 }
