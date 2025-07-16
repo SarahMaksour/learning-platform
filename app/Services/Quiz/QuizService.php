@@ -141,7 +141,9 @@ class QuizService
     {
         $status = $score >= 60 ? 'passed' : 'failed';
         if ($status === 'passed') {
-            $lesson = CourseContent::where('quiz_id', $quizId)->first();
+            $quiz = Quiz::find($quizId);
+$lesson =  $quiz->content;
+           // $lesson = CourseContent::where('quiz_id', $quizId)->first();
             if ($lesson) {
                 StudentLessonProgress::updateOrCreate(
                     [
