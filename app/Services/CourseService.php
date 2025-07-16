@@ -26,8 +26,14 @@ class CourseService
         $course=Course::findOrFail($course_id);
         $instructor=$course->instructor;
         $studentWallet=Wallet::where('user_id',$user->id)->lockForUpdate()->first();
-         $instructorWallet=Wallet::where('user_id',$instructor->id)->lockForUpdate()->first();
-       $price=$course->price;
+if (!$studentWallet) {
+        return response()->json(['message' => 'Student wallet not found'], 404);
+    }
+
+    $instructorWallet = Wallet::where('user_id', $instructor->id)->lockForUpdate()->first();
+    if (!$instructorWallet) {
+        return response()->json(['message' => 'Instructor wallet not found'], 404);
+    }       $price=$course->price;
         if (!$studentWallet || $studentWallet->balance < $price) {
         return response()->json([
             'message' => 'your balance is not enough',
