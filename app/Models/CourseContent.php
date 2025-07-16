@@ -29,4 +29,17 @@ class CourseContent extends Model
     {
         return $this->hasOne(Quiz::class);
     }
+    public function isPassedByUser($user)
+{
+    return $this->studentProgress()
+        ->where('user_id', $user->id)
+        ->where('is_passed', true)
+        ->exists();
+}
+
+public function studentProgress()
+{
+    return $this->hasMany(StudentLessonProgress::class);
+}
+
 }

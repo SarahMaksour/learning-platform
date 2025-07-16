@@ -59,4 +59,5 @@ Route::get('myProfile',[myProfileController::class,'show']);
 
 Route::post('wallet/recharge',[WalletController::class,'recharge']);
 Route::get('wallet',[WalletController::class,'showWallet']);
+Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 });

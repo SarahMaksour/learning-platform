@@ -13,4 +13,8 @@ class CourseService
         ->findOrFail($id);
 
     }
+       public function isUserPaid($user, $course): bool
+    {
+        return $user->enrollments()->where('course_id', $course->id)->exists();
+    }
 }

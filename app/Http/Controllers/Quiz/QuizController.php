@@ -56,6 +56,7 @@ class QuizController extends Controller
     public function submit(QuizRequest $request){
         $data=$request->validated();
         $result=$this->quizService->submitQuizAnswer($data);
+        $this->quizService->updatePlacementAttempt($data['quiz_id'],$result['score']);
         return response()->json(
             $result
         ,201);

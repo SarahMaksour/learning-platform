@@ -4,10 +4,12 @@ namespace App\Services\Quiz;
 
 use App\Models\Quiz;
 use App\Models\Question;
+use App\Models\CourseContent;
 use App\Models\StudentAnswer;
 use App\Models\Student_Answer;
 use App\Models\PlacementAttempt;
 use Illuminate\Support\Facades\Auth;
+use App\Models\StudentLessonProgress;
 
 class QuizService
 {
@@ -82,14 +84,14 @@ class QuizService
                 ];
             }
             $formattedQuestions[] = [
-                'question_id'=>$question->id,
+                'question_id' => $question->id,
                 'question' => $question->text,
                 'answer' => $answers,
             ];
         }
         return [
-            'quiz_id'=>$quiz->id,
-            'questions'=>$formattedQuestions
+            'quiz_id' => $quiz->id,
+            'questions' => $formattedQuestions
         ];
     }
     public function submitQuizAnswer(array $data)
@@ -98,7 +100,7 @@ class QuizService
         $quiz_id = $data['quiz_id'];
         $answers = $data['answers'];
         $correctCount = 0;
-        $incorrectCount=0;
+        $incorrectCount = 0;
         foreach ($answers as $answer) {
             $question = Question::where('id', $answer['question_id'])
                 ->where('quiz_id', $quiz_id)->first();
@@ -107,10 +109,8 @@ class QuizService
             $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
 
             if ($isCorrect) {
-               $correctCount ++;
-            }
-            else
-            {
+                $correctCount++;
+            } else {
                 $incorrectCount++;
             }
 
@@ -126,31 +126,34 @@ class QuizService
             );
         }
 
-         $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
-$score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
-         $status = ($score >= 60) ? 'passed' : 'failed';
+        $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
+        $score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
+        $status = ($score >= 60) ? 'passed' : 'failed';
 
-          return [
-         'score' => $score,
-         'status' => $status,
-         'correctCount'=>$correctCount,
-         'incorrectCount'=>$incorrectCount
-        ]; 
-    }
-   public function updatePlacementAttempt($quizId, $courseId, $score)
-{
-    $status = $score >= 60 ? 'passed' : 'failed';
-
-    return PlacementAttempt::updateOrCreate(
-        [
-            'user_id' => Auth::id(),
-            'quiz_id' => $quizId,
-            'course_id' => $courseId,
-        ],
-        [
+        return [
             'score' => $score,
             'status' => $status,
-        ]
-    );
-}
+            'correctCount' => $correctCount,
+            'incorrectCount' => $incorrectCount
+        ];
+    }
+    public function updatePlacementAttempt($quizId, $score)
+    {
+        $status = $score >= 60 ? 'passed' : 'failed';
+        if ($status === 'passed') {
+            $lesson = CourseContent::where('quiz_id', $quizId)->first();
+            if ($lesson) {
+                StudentLessonProgress::updateOrCreate(
+                    [
+                        'user_id' => Auth::id(),
+                        'content_id' => $lesson->id,
+                    ],
+                    [
+                        'is_passed' => true,
+                        'score' => $score,
+                    ]
+                );
+            }
+        }
+    }
 }
