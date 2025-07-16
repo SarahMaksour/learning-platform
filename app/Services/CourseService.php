@@ -23,8 +23,8 @@ class CourseService
     }
     public function enrollUserInCourseWithPayment($course_id){
         $user=Auth()->user();
-        $course=Course::findOrFail('$course_id');
-        $instructor=$course->instructor();
+        $course=Course::findOrFail($course_id);
+        $instructor=$course->instructor;
         $studentWallet=Wallet::where('user_id',$user->id)->lockForUpdate()->first();
          $instructorWallet=Wallet::where('instructor_id',$instructor->id)->lockForUpdate()->first();
        $price=$course->price;
