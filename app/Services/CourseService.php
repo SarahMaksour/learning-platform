@@ -26,7 +26,7 @@ class CourseService
         $course=Course::findOrFail($course_id);
         $instructor=$course->instructor;
         $studentWallet=Wallet::where('user_id',$user->id)->lockForUpdate()->first();
-         $instructorWallet=Wallet::where('instructor_id',$instructor->id)->lockForUpdate()->first();
+         $instructorWallet=Wallet::where('user_id',$instructor->id)->lockForUpdate()->first();
        $price=$course->price;
         if (!$studentWallet || $studentWallet->balance < $price) {
         return response()->json([
