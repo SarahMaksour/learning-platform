@@ -50,6 +50,7 @@ class CourseDetailsController extends Controller
 
                 $lesson->is_previous_lesson_passed = $unlock;
             }
+            $lesson->videoNum=$index+1;
         }
         return LessonStatusResource::collection($lessons);
     }
