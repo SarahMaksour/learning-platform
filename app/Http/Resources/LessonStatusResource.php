@@ -18,7 +18,7 @@ class LessonStatusResource extends JsonResource
             'lesson_id' => $this->id,
             'lesson_name' => optional($this->contentable)->title,
             'duration' => optional($this->contentable)->duration,
-            'video_number' => $this->video_number ?? null,
+            'video_number' => $this->videoNum ?? null,
             'is_paid' => $this->is_paid,
             'is_previous_lesson_passed' => $this->is_previous_lesson_passed,
         ];
