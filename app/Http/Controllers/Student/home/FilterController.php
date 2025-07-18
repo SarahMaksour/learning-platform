@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\FilterService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\FilterCourseResource;
 
 class FilterController extends Controller
 {
@@ -18,7 +19,7 @@ class FilterController extends Controller
     {
         $courses = $this->filterService->filterCourses($request);
 
-        return CourseResource::collection($courses);
+        return FilterCourseResource::collection($courses);
     }
     
     

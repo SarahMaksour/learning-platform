@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CourseResource extends JsonResource
+class FilterCourseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,7 +14,7 @@ class CourseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-         return [
+        return [
         'id'               => $this->id,
         'title'            => $this->title,
         'price'            => $this->price,
@@ -22,11 +22,11 @@ class CourseResource extends JsonResource
         'average_rating'   => (string) round($this->reviews_avg_rating ?? 0, 2),
         'ratings_count'    => $this->reviews_count ?? 0,
         'students_count'   => $this->enrollments_count ?? 0,
-        
+        'total_video_duration_seconds' => $this->total_video_duration ?? 0,
         'instructor'       => [
             'id'   => $this->instructor->id ?? null,
             'name' => $this->instructor->name ?? 'غير معروف',
         ],
     ];   
-}
+    }
 }
