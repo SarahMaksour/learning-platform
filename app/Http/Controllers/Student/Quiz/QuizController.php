@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Quiz;
+namespace App\Http\Controllers\Student\Quiz;
 
 use App\Models\Quiz;
 use Illuminate\Http\Request;

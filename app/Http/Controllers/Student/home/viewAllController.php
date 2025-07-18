@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\home;
+namespace App\Http\Controllers\Student\home;
 
 use Illuminate\Http\Request;
 use App\Services\HomeService;

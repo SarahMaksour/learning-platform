@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Student\home;
 
-use App\Services\FilterService;
 use Illuminate\Http\Request;
+use App\Services\FilterService;
+use App\Http\Controllers\Controller;
 
 class FilterController extends Controller
 {

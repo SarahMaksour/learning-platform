@@ -3,19 +3,19 @@
 use Illuminate\Http\Request;
 use App\Services\CourseReview;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Student\Auth\RoleController;
 
-use App\Http\Controllers\FilterController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\home\HomeController;
-use App\Http\Controllers\Quiz\QuizController;
-use App\Http\Controllers\home\viewAllController;
-use App\Http\Controllers\Courses\CourseDetailsController;
-use App\Http\Controllers\Courses\CourseReviewsController;
-use App\Http\Controllers\Courses\VideoContentController;
-use App\Http\Controllers\myProfile\myProfileController;
-use App\Http\Controllers\wallet\WalletController;
+use App\Http\Controllers\Student\home\FilterController;
+use App\Http\Controllers\Student\home\SearchController;
+use App\Http\Controllers\Student\Auth\AuthController;
+use App\Http\Controllers\Student\home\HomeController;
+use App\Http\Controllers\Student\Quiz\QuizController;
+use App\Http\Controllers\Student\home\viewAllController;
+use App\Http\Controllers\Student\Courses\CourseDetailsController;
+use App\Http\Controllers\Student\Courses\CourseReviewsController;
+use App\Http\Controllers\Student\Courses\VideoContentController;
+use App\Http\Controllers\Student\myProfile\myProfileController;
+use App\Http\Controllers\Student\wallet\WalletController;
 
 /*
 |--------------------------------------------------------------------------

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Student\home;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Services\SearchService;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
 
 class SearchController extends Controller
