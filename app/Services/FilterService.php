@@ -8,33 +8,46 @@ use Illuminate\Support\Facades\DB;
 
 class FilterService
 {
-    public function filterCourses(Request $request){
-        $query = Course::select('courses.*')
-            ->leftJoin('videos', 'courses.id', '=', 'videos.course_id')
-            ->groupBy('courses.id');
-    if ($request->filled('price_min') && $request->filled('price_max')) {
-            $query->whereBetween('courses.price', [$request->price_min, $request->price_max]);
+   public function filterCourses(Request $request)
+    {
+        // جلب الكورسات مع العلاقات اللازمة
+        $query = Course::with(['contents.contentable', 'instructor:id,name', 'reviews', 'enrollments'])
+            ->withAvg('reviews', 'rating')
+            ->withCount(['reviews', 'enrollments']);
+
+        // فلترة السعر
+        if ($request->filled('price_min') && $request->filled('price_max')) {
+            $query->whereBetween('price', [$request->price_min, $request->price_max]);
         }
 
-    if ($request->filled('rating')) {
-    $query->whereHas('reviews', function ($q) use ($request) {
-        $q->select(DB::raw('AVG(rating) as avg_rating'))
-            ->groupBy('course_id')
-            ->havingRaw('AVG(rating) >= ?', [$request->rating]);
-    });
-   
+        // فلترة التقييم
+        if ($request->filled('rating')) {
+            $query->having('reviews_avg_rating', '>=', $request->rating);
         }
-        
-   if($request->filled('duration_min')&&$request->filled('duration_max')){
-    $durationMin = $request->duration_min * 60;
-    $durationMax = $request->duration_max * 60;
-    $query->havingRaw('SUM(videos.duration) BETWEEN ? AND ?', [
-        $durationMin,
-        $durationMax,
-    ]);
-   }
 
-   $query->with('reviews','videos');
-   return $query->get();
+        $courses = $query->get(['id', 'title', 'price', 'image', 'user_id']);
+
+        // حساب مدة الفيديوهات يدويًا
+        foreach ($courses as $course) {
+            $totalDuration = 0;
+            foreach ($course->contents as $content) {
+                if ($content->contentable_type === \App\Models\Video::class && $content->contentable) {
+                    $totalDuration += $content->contentable->duration;
+                }
+            }
+          $course->setAttribute('total_video_duration', $totalDuration);
+        }
+
+        // فلترة على مدة الفيديوهات باستخدام Collection
+        if ($request->filled('duration_min') && $request->filled('duration_max')) {
+            $min = $request->duration_min * 60;
+            $max = $request->duration_max * 60;
+
+            $courses = $courses->filter(function ($course) use ($min, $max) {
+                return $course->total_video_duration >= $min && $course->total_video_duration <= $max;
+            })->values();
+        }
+
+        return $courses;
     }
 }

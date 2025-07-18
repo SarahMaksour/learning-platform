@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student\home;
 use Illuminate\Http\Request;
 use App\Services\FilterService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CourseResource;
 
 class FilterController extends Controller
 {
@@ -13,9 +14,11 @@ class FilterController extends Controller
         $this->filterService=$filterService;
     }
 
-    public function filter(Request $request){
-   $courses=$this->filterService->filterCourses($request);
-   return response()-> json(['data'=> $courses],201);
+    public function filterCourses(Request $request)
+    {
+        $courses = $this->filterService->filterCourses($request);
+
+        return CourseResource::collection($courses);
     }
     
     
