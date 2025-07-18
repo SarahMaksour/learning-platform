@@ -39,7 +39,7 @@ class CourseContent extends Model
 
 public function studentProgress()
 {
-    return $this->hasMany(StudentLessonProgress::class);
+    return $this->hasMany(StudentLessonProgress::class,'content_id');
 }
 
 }
