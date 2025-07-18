@@ -19,7 +19,7 @@ class FilterController extends Controller
     {
         $courses = $this->filterService->filterCourses($request);
 
-        return FilterCourseResource::collection($courses);
+        return CourseResource::collection($courses);
     }
     
     
