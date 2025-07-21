@@ -55,9 +55,9 @@ class CourseDetailsController extends Controller
         return LessonStatusResource::collection($lessons);
     }
 
-    public function PayTheCourse(Course $course){
-$course_id=$course->id;
-        $message=$this->courseService->enrollUserInCourseWithPayment($course_id);
+    public function PayTheCourse( $id){
+//$course_id=$course->id;
+        $message=$this->courseService->enrollUserInCourseWithPayment($id);
         return $message;
     }
 }
