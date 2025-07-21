@@ -16,8 +16,8 @@ class FilterService
             ->withCount(['reviews', 'enrollments']);
 
         // فلترة السعر
-        if ($request->filled('price_min') && $request->filled('price_max')) {
-            $query->whereBetween('price', [$request->price_min, $request->price_max]);
+        if ($request->filled('minPrice') && $request->filled('maxPrice')) {
+            $query->whereBetween('price', [$request->minPrice, $request->maxPrice]);
         }
 
         // فلترة التقييم
@@ -39,9 +39,9 @@ class FilterService
         }
 
         // فلترة على مدة الفيديوهات باستخدام Collection
-        if ($request->filled('duration_min') && $request->filled('duration_max')) {
-            $min = $request->duration_min * 60;
-            $max = $request->duration_max * 60;
+        if ($request->filled('minDuration') && $request->filled('maxDuration')) {
+            $min = $request->minDuration * 60;
+            $max = $request->maxDuration * 60;
 
             $courses = $courses->filter(function ($course) use ($min, $max) {
                 return $course->total_video_duration >= $min && $course->total_video_duration <= $max;
