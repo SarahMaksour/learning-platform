@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Instructor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
-use App\Services\instructor\MyCourseService;
+use App\Services\Instructor\MyCourseService;
 
 class CourseController extends Controller
 {
