@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Course;
@@ -8,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class FilterService
 {
-   public function filterCourses(Request $request)
+    public function filterCourses(Request $request)
     {
         // جلب الكورسات مع العلاقات اللازمة
         $query = Course::with(['contents.contentable', 'instructor:id,name', 'reviews', 'enrollments'])
@@ -35,14 +36,16 @@ class FilterService
                     $totalDuration += $content->contentable->duration;
                 }
             }
-          $course->setAttribute('total_video_duration', $totalDuration);
+            $course->setAttribute('total_video_duration', $totalDuration);
         }
 
         // فلترة على مدة الفيديوهات باستخدام Collection
         if ($request->filled('minDuration') && $request->filled('maxDuration')) {
             $min = $request->minDuration * 60;
             $max = $request->maxDuration * 60;
-
+            if ($min > $max) {
+                [$min, $max] = [$max, $min];
+            }
             $courses = $courses->filter(function ($course) use ($min, $max) {
                 return $course->total_video_duration >= $min && $course->total_video_duration <= $max;
             })->values();
