@@ -30,9 +30,8 @@ class CourseDetailResource extends JsonResource
                 'image' => $this->instructor->UserDetail->image ?? null,
                 'bio'=>$this->instructor->UserDetail->bio
             ],
-            'total_video_duration' => $this->contents
-                ->where('contentable_type', Video::class)
-                ->sum(fn($content) => $content->contentable->duration ?? 0),
+           'total_video_duration' => $this->total_video_duration_formatted,
+
         ];
     }
 }

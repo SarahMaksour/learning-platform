@@ -90,6 +90,23 @@ public function videos()
 {
     return $this->hasMany(Video::class);
 }
+public function getTotalVideoDurationFormattedAttribute()
+{
+    $minutes = $this->contents
+        ->where('contentable_type', \App\Models\Video::class)
+        ->sum(fn($content) => $content->contentable->duration ?? 0);
+
+    $hours = floor($minutes / 60);
+    $mins = $minutes % 60;
+
+    if ($hours && $mins) {
+        return "{$hours}h {$mins}m";
+    } elseif ($hours) {
+        return "{$hours}h";
+    } else {
+        return "{$mins}m";
+    }
+}
 
 
 }
