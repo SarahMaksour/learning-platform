@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\MyCourse;
+namespace App\Services\Instructor;
 
 use App\Models\Course;
 use GuzzleHttp\Psr7\Request;
