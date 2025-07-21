@@ -3,19 +3,20 @@
 use Illuminate\Http\Request;
 use App\Services\CourseReview;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Student\Auth\RoleController;
+use App\Http\Controllers\Instructor\CourseController;
 
-use App\Http\Controllers\Student\home\FilterController;
-use App\Http\Controllers\Student\home\SearchController;
 use App\Http\Controllers\Student\Auth\AuthController;
+use App\Http\Controllers\Student\Auth\RoleController;
 use App\Http\Controllers\Student\home\HomeController;
 use App\Http\Controllers\Student\Quiz\QuizController;
+use App\Http\Controllers\Student\home\FilterController;
+use App\Http\Controllers\Student\home\SearchController;
 use App\Http\Controllers\Student\home\viewAllController;
+use App\Http\Controllers\Student\wallet\WalletController;
+use App\Http\Controllers\Student\myProfile\myProfileController;
+use App\Http\Controllers\Student\Courses\VideoContentController;
 use App\Http\Controllers\Student\Courses\CourseDetailsController;
 use App\Http\Controllers\Student\Courses\CourseReviewsController;
-use App\Http\Controllers\Student\Courses\VideoContentController;
-use App\Http\Controllers\Student\myProfile\myProfileController;
-use App\Http\Controllers\Student\wallet\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +62,5 @@ Route::post('wallet/recharge',[WalletController::class,'recharge']);
 Route::get('wallet',[WalletController::class,'showWallet']);
 Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 Route::post('/courses/{id}/pay', [CourseDetailsController::class, 'PayTheCourse']);
-
+Route::get('/instructor/courses', [CourseController::class, 'getMyCourse']);
 });
