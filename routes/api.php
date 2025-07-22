@@ -63,4 +63,5 @@ Route::get('wallet',[WalletController::class,'showWallet']);
 Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 Route::post('/courses/{id}/pay', [CourseDetailsController::class, 'PayTheCourse']);
 Route::get('/instructor/courses', [CourseController::class, 'getMyCourse']);
+Route::post('/add/courses', [CourseController::class, 'addCourse']);
 });

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
 use App\Services\Instructor\MyCourseService;
+use App\Http\Requests\Instructor\courseRequest;
 
 class CourseController extends Controller
 {
@@ -18,5 +19,12 @@ $courses=$this->myCourseService->getMyCourse();
 return response()->json([
             'data' => CourseResource::collection($courses)
         ], 200);
+    }
+
+    public function addCourse(courseRequest $request){
+$response=$this->myCourseService->addCourse($request->validate());
+return response()->json([
+    $response
+],201);
     }
 }
