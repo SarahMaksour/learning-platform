@@ -12,7 +12,7 @@ class Question extends Model
        'quiz_id',
        'text',
        'option',
-       'points',
+    
        'correct_answer',
     ];
     

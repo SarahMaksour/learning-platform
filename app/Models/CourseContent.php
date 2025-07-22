@@ -9,7 +9,6 @@ class CourseContent extends Model
 {
     use HasFactory;
  protected $fillable = [
-
    'course_id',
     'contentable_type',
     'contentable_id',

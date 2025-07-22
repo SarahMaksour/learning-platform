@@ -13,8 +13,6 @@ class Quiz extends Model
         'course_id',
         'title',
         'type',
-        'total_point',
-    
     ];
 
     public function content()
