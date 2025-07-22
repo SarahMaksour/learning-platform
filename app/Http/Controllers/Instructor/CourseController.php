@@ -23,6 +23,7 @@ return response()->json([
 
     public function addCourse(courseRequest $request){
          $data = $request->validated();
+          $data['user_id'] = auth()->id();
 $response=$this->myCourseService->addCourse($data);
 return response()->json([
     $response
