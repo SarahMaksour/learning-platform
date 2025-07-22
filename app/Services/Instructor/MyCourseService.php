@@ -27,7 +27,7 @@ class MyCourseService{
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
             // 1. تخزين صورة الكورس
-            $imagePath = Arr::get($data, 'image')->store('/images', 'public');
+        //    $imagePath = Arr::get($data, 'image')->store('/images', 'public');
 
             // 2. إنشاء الكورس
             $course = Course::create([
@@ -35,11 +35,11 @@ class MyCourseService{
                 'title'      => Arr::get($data, 'title'),
                 'description'=> Arr::get($data, 'description'),
                 'price'      => Arr::get($data, 'price'),
-                'image'      => $imagePath,
+               // 'image'      => $imagePath,
             ]);
 
             // 3. تكرار الفيديوهات (الدروس)
-            foreach (Arr::get($data, 'videos', []) as $videoData) {
+         /*   foreach (Arr::get($data, 'videos', []) as $videoData) {
                 // 3.1 تخزين الفيديو
                 $videoPath = Arr::get($videoData, 'video')->store('/videos', 'public');
 
@@ -77,7 +77,7 @@ class MyCourseService{
                         ]);
                     }
                 }
-            }
+            }*/
       
             return ['message' => 'course add successfully'];
         });
