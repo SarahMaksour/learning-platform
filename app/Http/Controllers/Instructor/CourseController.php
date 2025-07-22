@@ -22,7 +22,7 @@ return response()->json([
     }
 
     public function addCourse(Request $request){
-$response=$this->myCourseService->addCourse($request);
+$response=$this->myCourseService->addCourse($request->all());
 return response()->json([
     $response
 ],201);
