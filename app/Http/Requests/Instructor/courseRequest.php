@@ -26,7 +26,7 @@ class courseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-          /*  'image' => 'required|image|max:2048',
+            'image' => 'required|image|max:2048',
             'videos' => 'required|array|min:1',
             'videos.*.title' => 'required|string|max:255',
             'videos.*.video' => 'required|file|mimes:mp4,mov,avi|max:50000',
@@ -39,7 +39,7 @@ class courseRequest extends FormRequest
             'videos.*.quiz.questions.*.options' => 'required|array|min:2',
             'videos.*.quiz.questions.*.correct_answer' => 'required|string',
             'videos.*.quiz.questions.*.points' => 'nullable|integer|min:1',
-     */
+     
         ];
     }
 }
