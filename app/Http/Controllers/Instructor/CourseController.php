@@ -25,8 +25,8 @@ return response()->json([
          $data = $request->validated();
           $data['user_id'] = auth()->id();
 $response=$this->myCourseService->addCourse($data);
-return response()->json([
+return response()->json(
     $response
-],201);
+,201);
     }
 }
