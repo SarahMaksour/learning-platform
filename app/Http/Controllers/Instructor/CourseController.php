@@ -22,7 +22,8 @@ return response()->json([
     }
 
     public function addCourse(courseRequest $request){
-$response=$this->myCourseService->addCourse($request->validate());
+         $data = $request->validated();
+$response=$this->myCourseService->addCourse($data);
 return response()->json([
     $response
 ],201);
