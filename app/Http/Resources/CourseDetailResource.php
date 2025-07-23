@@ -21,7 +21,7 @@ class CourseDetailResource extends JsonResource
             'description' => $this->description,
             'image_course' =>$this->image? asset($this->image) : null,
             'price' => $this->price,
-            'isPaid'=>$this->isPaid
+            'isPaid'=>$this->isPaid,
             'reviews_count' => $this->reviews_count,
             'reviews_avg_rating' => round($this->reviews_avg_rating, 2),
             'students_count' => $this->enrollments_count,
