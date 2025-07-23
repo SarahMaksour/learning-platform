@@ -22,6 +22,11 @@ class CourseDetailsController extends Controller
     {
 
         $courseDetail = $this->courseService->getAboutCourse($id);
+                $user = Auth()->user();
+        $course=Course::findOrFail($id);
+        $isPaid = $this->courseService->isUserPaid($user, $course);
+        $courseDetail->is_paid = $isPaid;
+
         return response()->json([
             'courseDetail' => new CourseDetailResource($courseDetail)
         ], 201);
