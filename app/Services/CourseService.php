@@ -55,4 +55,30 @@ class CourseService
         'message' => 'enrolment successfully',
     ]);
 }
+public function getCourseLessonsWithStatus($course_id, $user)
+{
+    $course = Course::with('contents')->findOrFail($course_id);
+    $isPaid = $this->isUserPaid($user, $course);
+    $lessons = $course->contents->sortBy('id')->values();
+
+    foreach ($lessons as $index => $lesson) {
+        $lesson->is_paid = $isPaid;
+        $lesson->is_previous_lesson_passed = false;
+
+        if ($isPaid) {
+            if ($index === 0) {
+                $unlock = true;
+            } else {
+                $previousLesson = $lessons[$index - 1];
+                $unlock = $previousLesson->isPassedByUser($user);
+            }
+
+            $lesson->is_previous_lesson_passed = $unlock;
+        }
+
+        $lesson->videoNum = $index + 1;
+    }
+
+    return $lessons;
+}
 }

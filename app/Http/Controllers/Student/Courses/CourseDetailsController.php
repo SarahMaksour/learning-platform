@@ -24,8 +24,8 @@ class CourseDetailsController extends Controller
         $courseDetail = $this->courseService->getAboutCourse($id);
                 $user = Auth()->user();
         $course=Course::findOrFail($id);
-        $isPaid = $this->courseService->isUserPaid($user, $course);
-        $courseDetail->is_paid = $isPaid;
+    $lessons = $this->courseService->getCourseLessonsWithStatus($id, $user);
+        $courseDetail->isPaid = $lessons->isPaid;
 
         return response()->json([
             'courseDetail' => new CourseDetailResource($courseDetail)
@@ -33,32 +33,13 @@ class CourseDetailsController extends Controller
     }
 
 
-    public function getCourseLesson($course_id)
-    {
-        $user = Auth()->user();
-        $course = Course::with('contents')->findOrFail($course_id);
-        $isPaid = $this->courseService->isUserPaid($user, $course);
-        $lessons = $course->contents->sortBy('id')->values();
-        $unlock = false;
-        foreach ($lessons as $index => $lesson) {
-            $lesson->is_paid = $isPaid;
-            $lesson->is_previous_lesson_passed = false;
+public function getCourseLesson($course_id)
+{
+    $user = Auth()->user();
+    $lessons = $this->courseService->getCourseLessonsWithStatus($course_id, $user);
+    return LessonStatusResource::collection($lessons);
+}
 
-            if ($isPaid) {
-
-                if ($index === 0) {
-                    $unlock = true;
-                } else {
-                    $previousLesson = $lessons[$index - 1];
-                    $unlock = $previousLesson->isPassedByUser($user);
-                }
-
-                $lesson->is_previous_lesson_passed = $unlock;
-            }
-            $lesson->videoNum=$index+1;
-        }
-        return LessonStatusResource::collection($lessons);
-    }
 
     public function PayTheCourse( $id){
 //$course_id=$course->id;
