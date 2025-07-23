@@ -32,7 +32,7 @@ class courseRequest extends FormRequest
             'videos.*.video' => 'required|file|mimes:mp4,mov,avi|max:50000',
             'videos.*.duration' => 'nullable|numeric',
             'videos.*.quiz' => 'nullable|array',
-           // 'videos.*.quiz.title' => 'required_with:videos.*.quiz|string|max:255',
+            'videos.*.quiz.title' => 'required_with:videos.*.quiz|string|max:255',
            // 'videos.*.quiz.total_point' => 'required_with:videos.*.quiz|numeric|min:0',
             'videos.*.quiz.questions' => 'required_with:videos.*.quiz|array|min:1',
             'videos.*.quiz.questions.*.text' => 'required|string',
