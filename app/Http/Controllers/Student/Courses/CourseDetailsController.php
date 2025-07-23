@@ -21,18 +21,16 @@ class CourseDetailsController extends Controller
     public function getAboutCourse($id)
     {
 
-        $courseDetail = $this->courseService->getAboutCourse($id);
-                $user = Auth()->user();
-        $course=Course::findOrFail($id);
-    $lessons = $this->courseService->getCourseLessonsWithStatus($id, $user);
-        $courseDetail->isPaid = $lessons->isPaid;
-
+      $courseDetail = $this->courseService->getAboutCourse($id);
+    $user = Auth()->user();
+    $course = Course::findOrFail($id);
+    $isPaid = $this->isUserPaid($user, $course);
+     $courseDetail->isPaid = $isPaid;
         return response()->json([
             'courseDetail' => new CourseDetailResource($courseDetail)
         ], 201);
+    
     }
-
-
 public function getCourseLesson($course_id)
 {
     $user = Auth()->user();
