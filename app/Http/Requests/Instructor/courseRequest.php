@@ -28,7 +28,7 @@ class courseRequest extends FormRequest
             'image' => 'required|image|max:2048',
             'videos' => 'required|array|min:1',
             'videos.*.title' => 'required|string|max:255',
-            'videos.*.description' => 'required|string|max:1000',
+          //  'videos.*.description' => 'required|string|max:1000',
             'videos.*.video' => 'required|file|mimes:mp4,mov,avi|max:50000',
             'videos.*.duration' => 'nullable|numeric',
             'videos.*.quiz' => 'nullable|array',

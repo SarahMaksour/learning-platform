@@ -48,6 +48,7 @@ class MyCourseService{
                 $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
+                    
                     'video_path'  => $videoPath,
                     'duration'    => Arr::get($videoData, 'duration'),
                 ]);
