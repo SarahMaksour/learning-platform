@@ -7,6 +7,7 @@ use App\Models\Video;
 use App\Models\Course;
 use App\Models\Question;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use GuzzleHttp\Psr7\Request;
 use App\Models\CourseContent;
 use Illuminate\Support\Facades\DB;
@@ -26,8 +27,10 @@ class MyCourseService{
 
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
-            $imagePath = Arr::get($data, 'image')->store('/images', 'public');
-
+            $image = $data['image'];
+            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+            $image->move(public_path('images'), $imageName);
+            $imagePath = 'images/' . $imageName;
             
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
@@ -38,8 +41,10 @@ class MyCourseService{
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-                $videoPath = Arr::get($videoData, 'video')->store('/videos', 'public');
-
+                 $videoFile = $videoData['video'];
+                $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+                $videoFile->move(public_path('videos'), $videoName);
+                $videoPath = 'videos/' . $videoName;
                 $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
@@ -74,5 +79,11 @@ class MyCourseService{
       
             return ['message' => 'course add successfully'];
         });
+    }
+     private function generateFileName($title, $extension)
+    {
+        $slug = Str::slug($title); // laravel-basics
+        $timestamp = now()->format('Ymd_His');
+        return "{$slug}_{$timestamp}.{$extension}";
     }
 }
