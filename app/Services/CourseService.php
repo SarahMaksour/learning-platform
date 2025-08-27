@@ -57,6 +57,7 @@ class CourseService
 }
 public function getCourseLessonsWithStatus($course_id, $user)
 {
+    
     $course = Course::with('contents')->findOrFail($course_id);
     $isPaid = $this->isUserPaid($user, $course);
     $lessons = $course->contents->sortBy('id')->values();
