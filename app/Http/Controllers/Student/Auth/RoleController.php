@@ -21,7 +21,7 @@ $user->save();
 return response()->json([
     'message' => 'Role set successfully',
     'role' => $user->role,
-],200);
+],201);
 
-}
+}  
 }

@@ -17,6 +17,7 @@ use App\Http\Controllers\Student\myProfile\myProfileController;
 use App\Http\Controllers\Student\Courses\VideoContentController;
 use App\Http\Controllers\Student\Courses\CourseDetailsController;
 use App\Http\Controllers\Student\Courses\CourseReviewsController;
+use App\Http\Controllers\TeacherDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::get('/filter',[FilterController::class ,'filterCourses']);
 Route::get('search',[SearchController::class ,'search']);
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseStatus']);
+Route::post('/teacherdetail',[TeacherDetailController::class ,'storeOrUpdate']);
 //Route::get('/quiz/{id}',[QuizController::class,'getQuizWithQuestion']);
 //Route::post('/quiz/submit-answer', [QuizController::class, 'submitAnswer']);
 //Route::post('/quiz/finalize', [QuizController::class, 'finalizeQuiz']);
@@ -64,4 +66,5 @@ Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseL
 Route::post('/courses/{id}/pay', [CourseDetailsController::class, 'PayTheCourse']);
 Route::get('/instructor/courses', [CourseController::class, 'getMyCourse']);
 Route::post('/add/courses', [CourseController::class, 'addCourse']);
+
 });
