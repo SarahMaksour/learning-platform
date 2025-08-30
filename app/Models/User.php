@@ -3,7 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
+use App\Models\Review;
+use App\Models\Enrolment;
 use App\Models\UserDetail;
+use App\Models\Certificate;
 use App\Models\PlacementAttempt;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -45,6 +49,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function studentLessonProgress()
+{
+    return $this->hasMany(StudentLessonProgress::class, 'user_id');
+}
+
+public function courses()
+{
+    return $this->hasMany(Course::class);
+}
+ public function scopeSearchFullName($query, $name)
+    {
+        return $query->whereRaw("CONCAT(name) LIKE ?", ['%' . $name . '%']);
+    }
+public function scopeSearchEmail($query, $email)
+    {
+        return $query->where('email', 'like', '%' . $email . '%');
+    }
 
     public function enrollments()
     {
@@ -60,7 +81,7 @@ class User extends Authenticatable
     }
     public function walled()
     {
-        return $this->hasOne(Walled::class);
+        return $this->hasOne(Wallet::class);
     }
     public function placementAttempts()
     {
@@ -74,4 +95,6 @@ public function discussions()
 {
     return $this->hasMany(Discussion::class);
 }
+
+ 
 }
