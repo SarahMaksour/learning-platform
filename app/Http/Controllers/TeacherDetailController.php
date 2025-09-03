@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class TeacherDetailController extends Controller
 {
@@ -25,9 +27,19 @@ class TeacherDetailController extends Controller
 
        
         $imagePath = $user->detail->image ?? null;
+       // إذا في صورة جديدة
         if ($request->hasFile('image')) {
-           
-            $imagePath = $request->file('image')->store('teachers', 'public');
+            // حذف القديمة إذا موجودة
+            if ($imagePath && File::exists(public_path($imagePath))) {
+                File::delete(public_path($imagePath));
+            }
+
+            // رفع الصورة الجديدة داخل public/images/teachers
+            $filename = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path('images/teachers'), $filename);
+
+            // نخزن المسار النسبي (من public/)
+            $imagePath = 'images/teachers/' . $filename;
         }
 
        

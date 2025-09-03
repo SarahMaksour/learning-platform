@@ -47,7 +47,7 @@ Route::get('/filter',[FilterController::class ,'filterCourses']);
 Route::get('search',[SearchController::class ,'search']);
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseStatus']);
-Route::post('/teacherdetail',[TeacherDetailController::class ,'storeOrUpdate']);
+Route::post('/teacherDetail',[TeacherDetailController::class ,'storeOrUpdate']);
 //Route::get('/quiz/{id}',[QuizController::class,'getQuizWithQuestion']);
 //Route::post('/quiz/submit-answer', [QuizController::class, 'submitAnswer']);
 //Route::post('/quiz/finalize', [QuizController::class, 'finalizeQuiz']);
