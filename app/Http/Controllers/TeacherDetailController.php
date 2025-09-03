@@ -14,10 +14,7 @@ class TeacherDetailController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role !== 'teacher') {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
+       
        
         $request->validate([
             'specialization' => 'required|string|max:255',
