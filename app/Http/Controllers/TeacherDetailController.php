@@ -23,40 +23,38 @@ class TeacherDetailController extends Controller
         ]);
 
        
-        $imagePath = $user->detail->image ?? null;
-       // إذا في صورة جديدة
-        if ($request->hasFile('image')) {
-            // حذف القديمة إذا موجودة
-            if ($imagePath && File::exists(public_path($imagePath))) {
-                File::delete(public_path($imagePath));
-            }
+       $imagePath = $user->detail->image ?? null;
 
-            // رفع الصورة الجديدة داخل public/images/teachers
-            $filename = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('images/teachers'), $filename);
+if ($request->hasFile('image')) {
+    // حذف القديمة
+    if ($imagePath && File::exists(public_path($imagePath))) {
+        File::delete(public_path($imagePath));
+    }
 
-            // نخزن المسار النسبي (من public/)
-            $imagePath = 'images/teachers/' . $filename;
-        }
+    $filename = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+    $request->file('image')->move(public_path('images/teachers'), $filename);
 
-       
-        $detail = UserDetail::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'specialization' => $request->specialization,
-                'bio' => $request->bio,
-                'image' => $imagePath,
-            ]
-        );
+    $imagePath = 'images/teachers/' . $filename; // نخزن المسار النسبي
+}
 
-        return response()->json([
-            'message' => 'Profile details saved successfully',
-            'data' => [
-                'specialization' => $detail->specialization,
-                'bio' => $detail->bio,
-                'image_url' => $detail->image ? asset('storage/'.$detail->image) : null, 
-            ]
-        ], 200);
+$detail = UserDetail::updateOrCreate(
+    ['user_id' => $user->id],
+    [
+        'specialization' => $request->specialization,
+        'bio' => $request->bio,
+        'image' => $imagePath, // تأكد إنو هذا يتخزن بالـ DB
+    ]
+);
+
+// Response
+return response()->json([
+    'message' => 'Profile details saved successfully',
+    'data' => [
+        'specialization' => $detail->specialization,
+        'bio' => $detail->bio,
+        'image_url' => $detail->image ? asset($detail->image) : null,
+    ]
+], 200);
     }
 }
 
