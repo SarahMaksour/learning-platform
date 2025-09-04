@@ -87,4 +87,119 @@ class MyCourseService{
         $timestamp = now()->format('Ymd_His');
         return "{$slug}_{$timestamp}.{$extension}";
     }
+      /**
+     * Update an existing course with videos and quizzes
+     */
+    public function updateCourse(int $courseId, array $data)
+    {
+        return DB::transaction(function() use ($courseId, $data) {
+
+            $course = Course::findOrFail($courseId);
+
+            // تحديث بيانات الكورس
+            foreach (['title', 'description', 'price'] as $field) {
+                if (Arr::has($data, $field)) {
+                    $course->$field = $data[$field];
+                }
+            }
+
+            // تحديث صورة الكورس إذا موجودة
+            if ($image = Arr::get($data, 'image')) {
+                $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
+                $image->move(public_path('images/courses'), $imageName);
+                $course->image = url('images/courses/' . $imageName);
+            }
+
+            $course->save();
+
+            // معالجة الفيديوهات
+            foreach (Arr::get($data, 'videos', []) as $videoData) {
+                $video = null;
+
+                // تعديل فيديو موجود
+                if ($videoId = Arr::get($videoData, 'id')) {
+                    $video = Video::findOrFail($videoId);
+                } else { 
+                    // إضافة فيديو جديد
+                    $video = new Video();
+                    $video->course_id = $course->id;
+                }
+
+                foreach (['title', 'description'] as $field) {
+                    if (Arr::has($videoData, $field)) {
+                        $video->$field = $videoData[$field];
+                    }
+                }
+
+                // تحديث أو إضافة ملف الفيديو
+                if ($videoFile = Arr::get($videoData, 'video')) {
+                    $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
+                    $videoFile->move(public_path('videos'), $videoName);
+                    $video->video_path = url('videos/' . $videoName);
+                }
+
+                $video->save();
+
+                // ربط الفيديو بالمحتوى إذا جديد
+                if (!CourseContent::where('contentable_id', $video->id)->exists()) {
+                    CourseContent::create([
+                        'course_id' => $course->id,
+                        'contentable_id' => $video->id,
+                        'contentable_type' => Video::class,
+                    ]);
+                }
+
+                // معالجة الكويزات
+                if ($quizData = Arr::get($videoData, 'quiz')) {
+                    $quiz = null;
+
+                    // تعديل كويز موجود
+                    if ($quizId = Arr::get($quizData, 'id')) {
+                        $quiz = Quiz::findOrFail($quizId);
+                    } else { // إضافة كويز جديد
+                        $quiz = new Quiz();
+                        $quiz->course_id = $course->id;
+                        $quiz->content_id = CourseContent::where('contentable_id', $video->id)->first()->id;
+                        $quiz->type = 'lesson';
+                    }
+
+                    if (Arr::has($quizData, 'title')) {
+                        $quiz->title = $quizData['title'];
+                    }
+
+                    $quiz->save();
+
+                    // معالجة الأسئلة
+                    foreach (Arr::get($quizData, 'questions', []) as $qData) {
+                        $question = null;
+
+                        // تعديل سؤال موجود
+                        if ($qId = Arr::get($qData, 'id')) {
+                            $question = Question::findOrFail($qId);
+                        } else { // إضافة سؤال جديد
+                            $question = new Question();
+                            $question->quiz_id = $quiz->id;
+                        }
+
+                        if (Arr::has($qData, 'text')) {
+                            $question->text = $qData['text'];
+                        }
+
+                        if (Arr::has($qData, 'options')) {
+                            $question->option = json_encode($qData['options']);
+                        }
+
+                        if (Arr::has($qData, 'correct_answer')) {
+                            $question->correct_answer = $qData['correct_answer'];
+                        }
+
+                        $question->save();
+                    }
+                }
+            }
+
+            return ['message' => 'course updated successfully'];
+        });
+    }
+
 }

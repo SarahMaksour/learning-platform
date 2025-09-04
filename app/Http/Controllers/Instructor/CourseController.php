@@ -29,4 +29,19 @@ return response()->json(
     $response
 ,201);
     }
+
+ public function updateCourse(courseRequest $request, $id)
+{
+    // نأخذ البيانات validated
+    $data = $request->validated();
+
+    // نضيف معرف المستخدم الحالي
+    $data['user_id'] = auth()->id();
+
+    // نستدعي الخدمة
+    $response = $this->myCourseService->updateCourse($id, $data);
+
+    // نرجع response بصيغة JSON
+    return response()->json($response, 200);
+}
 }
