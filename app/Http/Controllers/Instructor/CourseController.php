@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Instructor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CourseResource;
+use Illuminate\Support\Facades\Storage;
 use App\Services\Instructor\MyCourseService;
 use App\Http\Requests\Instructor\courseRequest;
 
@@ -43,5 +44,12 @@ return response()->json(
 
     // نرجع response بصيغة JSON
     return response()->json($response, 200);
+}
+public function testUpload(Request $request) {
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('test', 'public');
+        return ['path' => $path, 'url' => Storage::url($path)];
+    }
+    return ['error' => 'no file uploaded'];
 }
 }

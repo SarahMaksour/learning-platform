@@ -69,6 +69,8 @@ Route::post('/add/courses', [CourseController::class, 'addCourse']);
     Route::post('/courses/{id}/update', [CourseController::class, 'update']);
 
 });
+Route::post('/image', [CourseController::class, 'testUpload']);
+
 // فيديوهات
 Route::get('/media/videos/{filename}', function ($filename) {
     $path = '/mnt/volumes/media/videos/' . $filename;
