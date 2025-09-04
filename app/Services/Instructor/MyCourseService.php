@@ -28,10 +28,10 @@ class MyCourseService{
 
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
-  $image = $data['image'];
-            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-            $imagePath = $image->storeAs('images/courses', $imageName, 'public');
-            $imageUrl = Storage::url($imagePath);
+$image = request()->file('image');
+        $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+        $imagePath = $image->storeAs('images/courses', $imageName, 'public');
+        $imageUrl = Storage::url($imagePath);
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
@@ -42,7 +42,7 @@ class MyCourseService{
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-            $videoFile = $videoData['video'];
+            $videoFile =request()->file('video');
                 $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
                 $videoPath = $videoFile->storeAs('videos', $videoName, 'public');
                 $videoUrl = Storage::url($videoPath);
