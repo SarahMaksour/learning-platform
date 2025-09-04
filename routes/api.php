@@ -82,7 +82,7 @@ Route::get('/media/images/{filename}', function ($filename) {
     if (!file_exists($path)) abort(404);
     return response()->file($path);
 });
-Route::get('/media/{folder}/{filename}', function($folder, $filename){
+/*Route::get('/media/{folder}/{filename}', function($folder, $filename){
     $path = "/media/$folder/$filename";
 
     if (!file_exists($path)) {
@@ -90,4 +90,4 @@ Route::get('/media/{folder}/{filename}', function($folder, $filename){
     }
 
     return response()->file($path);
-});
+});*/

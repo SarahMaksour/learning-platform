@@ -28,9 +28,9 @@ class MyCourseService{
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
      $image = $data['image'];
-        $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-        $image->move('/media/images', $imageName);
-        $imagePath = '/media/images/' . $imageName;
+            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+            $image->move(public_path('media/images'), $imageName);
+            $imagePath = 'media/images/' . $imageName;
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
@@ -41,10 +41,10 @@ class MyCourseService{
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-           $videoFile = $videoData['video'];
-            $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-            $videoFile->move('/media/videos', $videoName);
-            $videoPath = '/media/videos/' . $videoName;
+            $videoFile = $videoData['video'];
+                $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+                $videoFile->move(public_path('media/videos'), $videoName);
+                $videoPath = 'media/videos/' . $videoName;
 
                 $video = Video::create([
                     'course_id'   => $course->id,
