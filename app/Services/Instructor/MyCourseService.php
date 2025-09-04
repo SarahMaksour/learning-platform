@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use GuzzleHttp\Psr7\Request;
 use App\Models\CourseContent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MyCourseService{
     public function getMyCourse(){
@@ -27,30 +28,30 @@ class MyCourseService{
 
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
-    $image = $data['image'];
-$imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-$image->move('/media', $imageName);
-$imagePath = 'media' . $imageName;
+  $image = $data['image'];
+            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+            $imagePath = $image->storeAs('images/courses', $imageName, 'public');
+            $imageUrl = Storage::url($imagePath);
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
                 'description'=> Arr::get($data, 'description'),
                 'price'      => Arr::get($data, 'price'),
-                'image'      => $imagePath,
+                'image'      =>  $imageUrl,
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
             $videoFile = $videoData['video'];
                 $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-                $videoFile->move(public_path('media/videos'), $videoName);
-                $videoPath = 'media/videos/' . $videoName;
+                $videoPath = $videoFile->storeAs('videos', $videoName, 'public');
+                $videoUrl = Storage::url($videoPath);
 
                 $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
                         'description' => Arr::get($videoData, 'description'), 
-                    'video_path'  => $videoPath,
+                    'video_path'  => $videoUrl,
                  //   'duration'    => Arr::get($videoData, 'duration'),
                 ]);
 
