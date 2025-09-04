@@ -27,12 +27,10 @@ class MyCourseService{
 
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
-            $imageFile = $data['image'];
-            $imageDir = '/mnt/volumes/media/images';
-            if (!file_exists($imageDir)) mkdir($imageDir, 0755, true);
-            $imageName = $this->generateFileName($data['title'], $imageFile->getClientOriginalExtension());
-            $imageFile->move($imageDir, $imageName);
-            $imagePath = 'media/images/' . $imageName;
+     $image = $data['image'];
+        $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+        $image->move('/media/images', $imageName);
+        $imagePath = '/media/images/' . $imageName;
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
@@ -44,11 +42,9 @@ class MyCourseService{
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
            $videoFile = $videoData['video'];
-                $videoDir = '/mnt/volumes/media/videos';
-                if (!file_exists($videoDir)) mkdir($videoDir, 0755, true);
-                $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-                $videoFile->move($videoDir, $videoName);
-                $videoPath = 'media/videos/' . $videoName;
+            $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+            $videoFile->move('/media/videos', $videoName);
+            $videoPath = '/media/videos/' . $videoName;
 
                 $video = Video::create([
                     'course_id'   => $course->id,
