@@ -27,11 +27,13 @@ class MyCourseService{
 
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
-            $image = $data['image'];
-            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-            $image->move(public_path('images'), $imageName);
-            $imagePath = 'images/' . $imageName;
-            
+            $imageFile = $data['image'];
+            $imageDir = '/mnt/volumes/media/images';
+            if (!file_exists($imageDir)) mkdir($imageDir, 0755, true);
+            $imageName = $this->generateFileName($data['title'], $imageFile->getClientOriginalExtension());
+            $imageFile->move($imageDir, $imageName);
+            $imagePath = 'media/images/' . $imageName;
+
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
@@ -41,16 +43,19 @@ class MyCourseService{
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-                 $videoFile = $videoData['video'];
+           $videoFile = $videoData['video'];
+                $videoDir = '/mnt/volumes/media/videos';
+                if (!file_exists($videoDir)) mkdir($videoDir, 0755, true);
                 $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-                $videoFile->move(public_path('videos'), $videoName);
-                $videoPath = 'videos/' . $videoName;
+                $videoFile->move($videoDir, $videoName);
+                $videoPath = 'media/videos/' . $videoName;
+
                 $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
                         'description' => Arr::get($videoData, 'description'), 
                     'video_path'  => $videoPath,
-                    'duration'    => Arr::get($videoData, 'duration'),
+                 //   'duration'    => Arr::get($videoData, 'duration'),
                 ]);
 
                 $content = CourseContent::create([

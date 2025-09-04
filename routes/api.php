@@ -69,3 +69,16 @@ Route::post('/add/courses', [CourseController::class, 'addCourse']);
     Route::post('/courses/{id}/update', [CourseController::class, 'update']);
 
 });
+// فيديوهات
+Route::get('/media/videos/{filename}', function ($filename) {
+    $path = '/mnt/volumes/media/videos/' . $filename;
+    if (!file_exists($path)) abort(404);
+    return response()->file($path);
+});
+
+// صور
+Route::get('/media/images/{filename}', function ($filename) {
+    $path = '/mnt/volumes/media/images/' . $filename;
+    if (!file_exists($path)) abort(404);
+    return response()->file($path);
+});
