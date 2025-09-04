@@ -27,10 +27,10 @@ class MyCourseService{
 
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
-     $image = $data['image'];
-            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-            $image->move(public_path('media/images'), $imageName);
-            $imagePath = 'media/images/' . $imageName;
+    $image = $data['image'];
+$imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+$image->move('/media', $imageName);
+$imagePath = 'media' . $imageName;
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
