@@ -27,6 +27,8 @@ class MyCourseService{
     }
 
     public function addCourse(array $data){
+        dd(request()->all(), request()->allFiles());
+
  return DB::transaction(function () use ($data) {
 $image = request()->file('image');
 if (!$image) {
