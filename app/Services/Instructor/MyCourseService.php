@@ -29,6 +29,9 @@ class MyCourseService{
     public function addCourse(array $data){
  return DB::transaction(function () use ($data) {
 $image = request()->file('image');
+if (!$image) {
+    throw new \Exception("Course image is required");
+}
         $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
         $imagePath = $image->storeAs('images/courses', $imageName, 'public');
         $imageUrl = Storage::url($imagePath);
@@ -42,7 +45,10 @@ $image = request()->file('image');
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-            $videoFile =request()->file('video');
+$videoFile = $videoData['video'] ?? null;
+if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
+    throw new \Exception("Video file is required for '{$videoData['title']}'");
+}
                 $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
                 $videoPath = $videoFile->storeAs('videos', $videoName, 'public');
                 $videoUrl = Storage::url($videoPath);
