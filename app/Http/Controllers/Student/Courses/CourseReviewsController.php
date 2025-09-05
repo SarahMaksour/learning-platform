@@ -37,7 +37,9 @@ class CourseReviewsController extends Controller
     $videoContents = $course->contents()->where('contentable_type', \App\Models\Video::class)->get();
 
     // التحقق من اجتياز كل الدروس
-    $allVideosCompleted = $videoContents->every(fn($content) => $content->contentable->isPassedByUser($user));
+    $allVideosCompleted = $course->contents
+    ->where('contentable_type', \App\Models\Video::class)
+    ->every(fn($content) => $content->isPassedByUser($user));
 
     if (!$allVideosCompleted) {
         return response()->json([
