@@ -28,7 +28,7 @@ class myProfile extends Controller
     if ($wallet->balance < $amount) {
         return response()->json([
             'message' => 'Insufficient balance',
-            'balance' => $wallet->balance
+          
         ], 400);
     }
 
@@ -49,7 +49,7 @@ class myProfile extends Controller
 
     return response()->json([
         'message' => 'Balance withdrawn successfully',
-        'balance' => $wallet->balance
+      
     ], 200);
 }
 
