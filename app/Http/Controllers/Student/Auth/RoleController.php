@@ -17,10 +17,13 @@ class RoleController extends Controller
 $user = $request->user(); 
 $user->role = $request->role;
 $user->save();
+ $token = $user->createToken('Auth_token')->plainTextToken;
 
 return response()->json([
     'message' => 'Role set successfully',
     'role' => $user->role,
+       'token' => $token
+
 ],201);
 
 }  
