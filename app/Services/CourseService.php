@@ -55,7 +55,7 @@ public function getCourseLessonsWithStatus($course_id, $user)
     $course = Course::with('contents')->findOrFail($course_id);
 
     // إذا الزائر مو مسجّل دخول
-    if (!$user) {
+  /*  if (!$user) {
         $lessons = $course->contents->sortBy('id')->values();
         foreach ($lessons as $index => $lesson) {
             $lesson->is_paid = false;
@@ -64,7 +64,7 @@ public function getCourseLessonsWithStatus($course_id, $user)
         }
         return $lessons;
     }
-
+*/
     // إذا المستخدم مسجّل دخول
     $isPaid = $this->isUserPaid($user, $course);
     $lessons = $course->contents->sortBy('id')->values();
