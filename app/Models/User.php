@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function enrollments()
     {
-        return $this->hasMany(Enrolment::class);
+        return $this->hasMany(Enrolment::class.'user_id');
     }
     public function reviews()
     {

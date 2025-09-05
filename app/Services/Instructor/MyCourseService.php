@@ -36,7 +36,7 @@ if (!$image) {
         $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
         $imagePath = $image->storeAs('images/courses', $imageName, 'public');
         $imageUrl = Storage::url($imagePath);
-
+    
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
@@ -53,13 +53,17 @@ if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
                 $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
                 $videoPath = $videoFile->storeAs('videos', $videoName, 'public');
                 $videoUrl = Storage::url($videoPath);
+// حساب المدة باستخدام getID3
+$getID3 = new \getID3;
+$fileInfo = $getID3->analyze(storage_path('app/public/' . $videoPath));
+$durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
 
                 $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
                         'description' => Arr::get($videoData, 'description'), 
                     'video_path'  => $videoUrl,
-                 //   'duration'    => Arr::get($videoData, 'duration'),
+                'duration'    => $durationSeconds,
                 ]);
 
                 $content = CourseContent::create([

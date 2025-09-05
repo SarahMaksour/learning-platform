@@ -89,5 +89,4 @@ public function getCourseLessonsWithStatus($course_id, $user)
 
     return $lessons;
 }
-
 }
