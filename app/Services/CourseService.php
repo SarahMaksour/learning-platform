@@ -53,6 +53,10 @@ class CourseService
 public function getCourseLessonsWithStatus($course_id, $user)
 {
     $course = Course::with('contents')->findOrFail($course_id);
+ $lessons = $course->contents->sortBy('id')->values();
+
+    // إذا المستخدم مسجّل دخول نتحقق إذا اشترى الكورس
+    $isPaid = $user ? $this->isUserPaid($user, $course) : false;
 
     // إذا الزائر مو مسجّل دخول
   /*  if (!$user) {
