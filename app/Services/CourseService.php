@@ -25,11 +25,9 @@ class CourseService
         $user=Auth()->user();
         $course=Course::findOrFail($course_id);
         $instructor=$course->instructor;
-        $studentWallet=Wallet::where('user_id',$user->id)->lockForUpdate()->first();
-
-
-    $instructorWallet = Wallet::where('user_id', $instructor->id)->lockForUpdate()->first();
-           $price=$course->price;
+       $studentWallet = Wallet::firstOrCreate(['user_id' => $user->id]);
+       $instructorWallet = Wallet::firstOrCreate(['user_id' => $instructor->id]);
+       $price=$course->price;
         if (!$studentWallet || $studentWallet->balance < $price) {
         return response()->json([
             'message' => 'your balance is not enough',
@@ -37,12 +35,9 @@ class CourseService
     }
        DB::transaction(function () use ($studentWallet,  $instructorWallet, $price, $user, $course) {
         // خصم من الطالب
-        $studentWallet->balance -= $price;
-        $studentWallet->save();
-
+        $studentWallet->decrement('balance', $price);
         // إضافة للمدرّس
-         $instructorWallet->balance += $price;
-        $instructorWallet->save();
+          $instructorWallet->increment('balance', $price);
 
         // تسجيل الطالب
         Enrolment::firstOrCreate([
