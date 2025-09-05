@@ -17,10 +17,14 @@ class CourseService
         ->findOrFail($id);
 
     }
-       public function isUserPaid($user, $course): bool
-    {
-        return $user->enrollments()->where('course_id', $course->id)->exists();
+      public function isUserPaid($user, $course): bool
+{
+    if (!$user) {
+        return false; // الزائر لم يشترِ الكورس
     }
+
+    return $user->enrollments()->where('course_id', $course->id)->exists();
+}
     public function enrollUserInCourseWithPayment($course_id){
         $user=Auth()->user();
         $course=Course::findOrFail($course_id);
@@ -56,8 +60,7 @@ public function getCourseLessonsWithStatus($course_id, $user)
  $lessons = $course->contents->sortBy('id')->values();
 
     // إذا المستخدم مسجّل دخول نتحقق إذا اشترى الكورس
-    $isPaid = $user ? $this->isUserPaid($user, $course) : false;
-
+   $isPaid = $this->isUserPaid($user, $course);
     // إذا الزائر مو مسجّل دخول
   /*  if (!$user) {
         $lessons = $course->contents->sortBy('id')->values();
