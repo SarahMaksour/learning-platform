@@ -116,11 +116,11 @@ if (!$userDetail) {
         $user = Auth::user();  
 
         return response()->json([  
-            'id'=>$user->id,
+           // 'id'=>$user->id,
             'user_name' => $user->name,  
             'email'     => $user->email,  
             'image'     => $user->userDetail && $user->userDetail->image  
-                                ? asset('storage/' . $user->userDetail->image)  
+                                ? asset('public/' . $user->userDetail->image)  
                                 : null,  
         ]);  
     }  
