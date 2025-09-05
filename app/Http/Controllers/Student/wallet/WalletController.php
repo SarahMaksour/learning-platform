@@ -21,7 +21,7 @@ class WalletController extends Controller
 
          return response()->json([
             'message' => 'get balance successfully',
-            'balance' => optional($wallet)->balance??0
+            'balance' => optional($wallet)->balance??"0"
 ]);
 
     }
