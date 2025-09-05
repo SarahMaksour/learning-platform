@@ -59,7 +59,6 @@ Route::get('myProfile',[myProfileController::class,'show']);
 
 Route::post('wallet/recharge',[WalletController::class,'recharge']);
 Route::get('wallet',[WalletController::class,'showWallet']);
-Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 Route::post('/courses/{id}/pay', [CourseDetailsController::class, 'PayTheCourse']);
 Route::get('/instructor/courses', [CourseController::class, 'getMyCourse']);
 Route::post('/add/courses', [CourseController::class, 'addCourse']);
@@ -82,6 +81,7 @@ Route::get('search',[SearchController::class ,'search']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
+//Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 
 // فيديوهات
 Route::get('/media/videos/{filename}', function ($filename) {
