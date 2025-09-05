@@ -39,7 +39,6 @@ Route::post('login', [AuthController::class,'login']);
 Route::post('logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')
 ->group(function () {
-Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
@@ -70,6 +69,7 @@ Route::post('/add/courses', [CourseController::class, 'addCourse']);
 
 });
 Route::post('/image', [CourseController::class, 'testUpload']);
+Route::get('/home', [HomeController::class, 'homePage']);
 
 // فيديوهات
 Route::get('/media/videos/{filename}', function ($filename) {
