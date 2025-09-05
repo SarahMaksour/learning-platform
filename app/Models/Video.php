@@ -19,5 +19,16 @@ public function course()
 {
     return $this->belongsTo(Course::class);
 }
+public function quiz()
+{
+    return $this->hasOneThrough(
+        Quiz::class,          // الموديل النهائي
+        CourseContent::class, // الموديل الوسيط
+        'contentable_id',     // المفتاح في CourseContent اللي بيربط الفيديو
+        'content_id',         // المفتاح في Quiz اللي بيربط CourseContent
+        'id',                 // المفتاح المحلي في Video
+        'id'                  // المفتاح المحلي في CourseContent
+    )->where('contentable_type', self::class);
+}
 
 }
