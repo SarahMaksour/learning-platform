@@ -18,16 +18,20 @@ class HomeController extends Controller
 public function homePage(){
     $featuredPopular=$this->homeService->getPopularCourses();
     $featuredTopRated=$this->homeService->getTopRatedCourses();
-$userModel = auth()->user(); // ترجع null إذا مش مسجل دخول
-$user = $userModel 
-    ? new UserResource($userModel)
-    : new UserResource((object)[
-        'id' => 0,
-        'name' => 'Guest',
-        'email' => 'null@gmail.com'
-    ]);
+// نجيب الـ user من Sanctum إذا مسجل دخول
+    $user = auth('sanctum')->user();
+
+    // إذا ما فيه user، نرجع guest
+    $userResource = $user
+        ? new UserResource($user)
+        : new UserResource((object)[
+            'id' => 0,
+            'name' => 'Guest',
+            'email' => 'guest@example.com'
+        ]);
+
     return response()->json([
-         'user' => $user,
+         'user' => $userResource,
         'popular_courses' => CourseResource::collection($featuredPopular),
         'top_rated_courses' => CourseResource::collection($featuredTopRated),
         ]
