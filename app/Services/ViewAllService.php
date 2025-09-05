@@ -9,7 +9,7 @@ class ViewAllService
         return Course::withCount('enrollments')
             ->withAvg('reviews', 'rating')
             ->with('instructor:id,name')
-            ->having('enrollments_count', '>', 1000)
+            ->having('enrollments_count', '>', 1)
             ->orderByDesc('enrollments_count')
             ->get(['id', 'title', 'price', 'image', 'user_id']);
     }
