@@ -51,4 +51,42 @@ public function myEnrolledCourses()
     return response()->json($response, 200);
 }
 
+public function myFullyCompletedCourses()
+{
+    $user = auth()->user();
+
+    $courses = Course::whereHas('enrollments', function($q) use ($user) {
+        $q->where('user_id', $user->id);
+    })->with(['instructor', 'contents.contentable'])->get()
+       ->filter(function ($course) use ($user) {
+             // كل الفيديوهات لازم يكون الطالب مخلصها
+    $allVideosCompleted = $course->contents
+        ->where('contentable_type', \App\Models\Video::class)
+        ->every(fn($content) => $content->isPassedByUser($user));
+
+           
+    // كل الكويزات لازم الطالب نجح فيها
+    $allQuizzesPassed = $course->contents
+        ->pluck('quiz')
+        ->filter()
+        ->every(fn($quiz) => $quiz->placementAttempts()
+            ->where('user_id', $user->id)
+            ->where('passed', true)
+            ->exists()
+        );
+
+            return $allVideosCompleted && $allQuizzesPassed;
+        })
+       ->map(function ($course) {
+    return [
+        'id' => $course->id,
+        'title' => $course->title,
+        'image' => $course->image,
+        'instructor' => $course->instructor->name,
+    ];
+}) ->values();
+
+    return response()->json($courses, 200);
+}
+
 }
