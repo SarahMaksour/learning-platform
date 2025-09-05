@@ -120,8 +120,10 @@ if (!$userDetail) {
             'user_name' => $user->name,  
             'email'     => $user->email,  
             'image'     => $user->userDetail && $user->userDetail->image  
-                                ? asset('public/' . $user->userDetail->image)  
+                                ? asset('/' . $user->userDetail->image)  
                                 : null,  
+  //      'image_course' =>$user->userDetail->image? asset($this->image) : null,
+
         ]);  
     }  
 }
