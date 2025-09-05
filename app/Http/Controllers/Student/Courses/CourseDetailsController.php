@@ -23,13 +23,7 @@ class CourseDetailsController extends Controller
     {
 
     $courseDetail = $this->courseService->getAboutCourse($id);
-   $user = auth()->check() 
-    ? new UserResource(auth()->user()) 
-    : new UserResource((object)[
-        'id' => 0,
-        'name' => 'Guest',
-        'email' => 'null@gmail.com'
-    ]);
+  $user = auth()->user();
     $course = Course::findOrFail($id);
     $is_paid = $this->courseService->isUserPaid($user, $course);
      $courseDetail->is_paid = $is_paid;

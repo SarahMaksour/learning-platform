@@ -24,11 +24,8 @@ public function myEnrolledCourses()
         $q->where('user_id', $user->id);
     })->with(['instructor', 'contents.contentable'])->get();
 
-    $response = $courses->mapWithKeys(function($course) use ($user) {
-        // مجموع الفيديوهات في الكورس
+    $response = $courses->map(function($course) use ($user) {
         $totalVideos = $course->contents->where('contentable_type', Video::class)->count();
-
-        // عدد الفيديوهات اللي خلصها الطالب
         $completedVideos = $course->contents
             ->where('contentable_type', Video::class)
             ->filter(fn($content) => $content->studentProgress()
@@ -40,18 +37,20 @@ public function myEnrolledCourses()
         $progress = $totalVideos ? round($completedVideos / $totalVideos * 100) : 0;
 
         return [
-            $course->id => [
-                'id' => $course->id,
-                'title' => $course->title,
-                'image' => $course->image,
-                'instructor' => $course->instructor->name ?? null,
-                'progress' => $progress,
-            ]
+            'id' => $course->id,
+            'title' => $course->title,
+            'image' => $course->image,
+            'instructor' => $course->instructor->name ?? null,
+            'progress' => $progress,
         ];
     });
 
-    return response()->json($response, 200);
+    // هنا نرجع الـ array داخل object مع مفتاح "courses"
+    return response()->json([
+        'courses' => $response
+    ], 200);
 }
+
 
 public function myFullyCompletedCourses()
 {
@@ -82,7 +81,7 @@ public function myFullyCompletedCourses()
     })
     ->values();
 
-    return response()->json($courses, 200);
+    return response()->json(['courses' => $courses], 200);
 }
 
 
