@@ -19,24 +19,22 @@ class CourseDetailsController extends Controller
     {
         $this->courseService = $courseService;
     }
-    public function getAboutCourse($id)
-    {
-
+ 
+public function getAboutCourse($id)
+{
     $courseDetail = $this->courseService->getAboutCourse($id);
- $user = auth('sanctum')->user();
-    $userObject = $user ?? (object)[
-        'id' => 0,
-        'name' => 'Guest',
-        'email' => 'guest@example.com'
-    ];
+
+    $user = auth()->user(); // ممكن يكون null
     $course = Course::findOrFail($id);
-    $is_paid = $this->courseService->isUserPaid($user, $course);
-     $courseDetail->is_paid = $is_paid;
-        return response()->json([
-            'courseDetail' => new CourseDetailResource($courseDetail)
-        ], 201);
-    
-    }
+
+    $is_paid = $user ? $this->courseService->isUserPaid($user, $course) : false;
+    $courseDetail->is_paid = $is_paid;
+
+    return response()->json([
+        'courseDetail' => new CourseDetailResource($courseDetail)
+    ], 201);
+}
+
 public function getCourseLesson($course_id)
 {
     $user = Auth()->user();
