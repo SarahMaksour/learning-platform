@@ -18,9 +18,14 @@ class HomeController extends Controller
 public function homePage(){
     $featuredPopular=$this->homeService->getPopularCourses();
     $featuredTopRated=$this->homeService->getTopRatedCourses();
-   $user=auth()->user();
-    return response()->json([
-         'user' => new UserResource($user),
+$user = auth()->check() 
+    ? new UserResource(auth()->user()) 
+    : new UserResource((object)[
+        'id' => 0,
+        'name' => 'Guest',
+        'email' => 'null@gmail.com'
+    ]);    return response()->json([
+         'user' => $user,
         'popular_courses' => CourseResource::collection($featuredPopular),
         'top_rated_courses' => CourseResource::collection($featuredTopRated),
         ]
