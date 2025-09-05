@@ -60,7 +60,7 @@ class User extends Authenticatable
     }
     public function walled()
     {
-        return $this->hasOne(Walled::class);
+        return $this->hasOne(Wallet::class);
     }
     public function placementAttempts()
     {

@@ -135,4 +135,5 @@ public function deleteLesson($courseId, $contentId)
     return response()->json(['message' => 'Lesson and related quiz deleted successfully'], 200);
 }
 
+
 }
