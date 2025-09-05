@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\CourseService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use App\Services\LessonCourseService;
 use App\Services\CoursePurchaseService;
 use App\Http\Resources\CourseDetailResource;
@@ -37,7 +38,7 @@ public function getAboutCourse($id)
 
 public function getCourseLesson($course_id)
 {
-    $user = Auth()->user();
+    $user = Auth::check() ? Auth::user() : null; 
     $lessons = $this->courseService->getCourseLessonsWithStatus($course_id, $user);
     return LessonStatusResource::collection($lessons);
 }

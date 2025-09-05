@@ -111,4 +111,16 @@ if (!$userDetail) {
             'message' => 'تم تعديل بياناتك بنجاح'
         ]);
     }
+    public function showProfile()  
+    {  
+        $user = Auth::user();  
+
+        return response()->json([  
+            'user_name' => $user->name,  
+            'email'     => $user->email,  
+            'image'     => $user->userDetail && $user->userDetail->image  
+                                ? asset('storage/' . $user->userDetail->image)  
+                                : null,  
+        ]);  
+    }  
 }
