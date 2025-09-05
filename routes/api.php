@@ -56,6 +56,7 @@ Route::prefix('contents')->group(function () {
     Route::post('comments/{commentId}/reply', [VideoContentController::class, 'storeReply']);
 });
 Route::get('myProfile',[myProfileController::class,'show']);
+Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 
 Route::post('wallet/recharge',[WalletController::class,'recharge']);
 Route::get('wallet',[WalletController::class,'showWallet']);
@@ -80,7 +81,6 @@ Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('search',[SearchController::class ,'search']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
-Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 //Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 
 // فيديوهات
