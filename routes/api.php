@@ -42,7 +42,6 @@ Route::middleware('auth:sanctum')
 Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/filter',[FilterController::class ,'filterCourses']);
-Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseStatus']);
 Route::post('/teacherDetail',[TeacherDetailController::class ,'storeOrUpdate']);
 //Route::get('/quiz/{id}',[QuizController::class,'getQuizWithQuestion']);
@@ -77,6 +76,8 @@ Route::post('/image', [CourseController::class, 'testUpload']);
 Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('search',[SearchController::class ,'search']);
 Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse']);
+Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
+Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 
 // فيديوهات
 Route::get('/media/videos/{filename}', function ($filename) {
