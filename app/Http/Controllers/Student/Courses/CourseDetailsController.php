@@ -23,7 +23,12 @@ class CourseDetailsController extends Controller
     {
 
     $courseDetail = $this->courseService->getAboutCourse($id);
-  $user = auth()->user();
+ $user = auth('sanctum')->user();
+    $userObject = $user ?? (object)[
+        'id' => 0,
+        'name' => 'Guest',
+        'email' => 'guest@example.com'
+    ];
     $course = Course::findOrFail($id);
     $is_paid = $this->courseService->isUserPaid($user, $course);
      $courseDetail->is_paid = $is_paid;
