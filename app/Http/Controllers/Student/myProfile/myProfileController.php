@@ -71,7 +71,7 @@ public function myFullyCompletedCourses()
         ->filter()
         ->every(fn($quiz) => $quiz->placementAttempts()
             ->where('user_id', $user->id)
-            ->where('passed', true)
+            ->where('score', '>=', 50)
             ->exists()
         );
 
