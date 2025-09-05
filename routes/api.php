@@ -62,12 +62,14 @@ Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseL
 Route::post('/courses/{id}/pay', [CourseDetailsController::class, 'PayTheCourse']);
 Route::get('/instructor/courses', [CourseController::class, 'getMyCourse']);
 Route::post('/add/courses', [CourseController::class, 'addCourse']);
-    Route::post('/courses/{id}/update', [CourseController::class, 'updateCourse']);
+Route::post('/courses/{id}/update', [CourseController::class, 'updateCourse']);
 Route::get('/editCourses/{id}', [CourseController::class, 'getCourse']);
 Route::get('/my-courses/all', [myProfileController::class, 'myEnrolledCourses']);
 Route::get('/my-courses/complete', [myProfileController::class, 'myFullyCompletedCourses']);
 
-Route::delete('/courses/{id}', [CourseController::class, 'deleteCourse']);
+Route::delete('/deleteCourses/{id}', [CourseController::class, 'deleteCourse']);
+Route::delete('/courses/{courseId}/lessons/{contentId}', [CourseController::class, 'deleteLesson']);
+
 });
 
 

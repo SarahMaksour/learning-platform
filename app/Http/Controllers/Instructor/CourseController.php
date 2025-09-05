@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Instructor;
 
+use App\Models\Quiz;
+use App\Models\Video;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -96,4 +98,41 @@ public function deleteCourse($id)
         'message' => 'Course deleted successfully'
     ], 200);
 }
+public function deleteLesson($courseId, $contentId)
+{
+    $user = auth()->user();
+
+    // تأكد إنو الكورس ملك للمستخدم
+    $course = Course::where('id', $courseId)
+        ->where('user_id', $user->id)
+        ->firstOrFail();
+
+    $content = $course->contents()->with('contentable')->findOrFail($contentId);
+
+    // إذا كان المحتوى فيديو
+    if ($content->contentable && $content->contentable_type === \App\Models\Video::class) {
+        $video = $content->contentable;
+
+        // حذف الفيديو من التخزين إذا موجود
+        if ($video->video_path && Storage::disk('public')->exists($video->video_path)) {
+            Storage::disk('public')->delete($video->video_path);
+        }
+
+        $video->delete();
+    }
+
+    // إذا عنده كويز مربوط
+    $quiz = \App\Models\Quiz::where('content_id', $content->id)->first();
+    if ($quiz) {
+        // حذف الأسئلة التابعة
+        $quiz->questions()->delete();
+        $quiz->delete();
+    }
+
+    // حذف الـ CourseContent نفسه
+    $content->delete();
+
+    return response()->json(['message' => 'Lesson and related quiz deleted successfully'], 200);
+}
+
 }
