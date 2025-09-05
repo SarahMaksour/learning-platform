@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Student\Courses;
 
-use App\Services\LessonCourseService;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Services\CourseService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Services\LessonCourseService;
+use App\Services\CoursePurchaseService;
 use App\Http\Resources\CourseDetailResource;
 use App\Http\Resources\LessonStatusResource;
-use App\Models\Course;
-use App\Services\CoursePurchaseService;
 
 class CourseDetailsController extends Controller
 {
@@ -22,7 +23,13 @@ class CourseDetailsController extends Controller
     {
 
     $courseDetail = $this->courseService->getAboutCourse($id);
-    $user = Auth()->user();
+   $user = auth()->check() 
+    ? new UserResource(auth()->user()) 
+    : new UserResource((object)[
+        'id' => 0,
+        'name' => 'Guest',
+        'email' => 'null@gmail.com'
+    ]);
     $course = Course::findOrFail($id);
     $is_paid = $this->courseService->isUserPaid($user, $course);
      $courseDetail->is_paid = $is_paid;
