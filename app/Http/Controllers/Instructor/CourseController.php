@@ -33,45 +33,37 @@ return response()->json(
     }
 public function getCourse($id)
 {
-    $course = Course::with(['videos.courseContent.quiz.questions'])->findOrFail($id);
-
-    $videos = $course->videos->map(function($video) {
-        $quiz = $video->courseContent->quiz ?? null;
-
-        return [
-            'id' => $video->id,
-            'title' => $video->title,
-            'description' => $video->description,
-            'video_path' => $video->video_path,
-            'quiz' => $quiz ? [
-                'id' => $quiz->id,
-                'title' => $quiz->title,
-                'questions' => $quiz->questions->map(function($q){
-                    $options = $q->option;
-                    if (is_string($options)) {
-                        $options = json_decode($options, true);
-                    }
-                    return [
-                        'id' => $q->id,
-                        'text' => $q->text,
-                        'options' => $options,
-                        'correct_answer' => $q->correct_answer,
-                    ];
-                }),
-            ] : null,
-        ];
-    });
+    $course = Course::with(['videos.quiz.questions'])->findOrFail($id);
 
     return response()->json([
-        'id' => $course->id,
-        'title' => $course->title,
-        'description' => $course->description,
-        'price' => $course->price,
-        'image' => $course->image,
-        'videos' => $videos,
-    ]);
+        'course' => [
+            'id' => $course->id,
+            'title' => $course->title,
+            'description' => $course->description,
+            'price' => $course->price,
+            'image' => $course->image,
+            'videos' => $course->videos->map(function($video){
+                return [
+                    'id' => $video->id,
+                    'title' => $video->title,
+                    'description' => $video->description,
+                    'video_path' => $video->video_path,
+                    'quiz' => $video->quiz ? [
+                        'id' => $video->quiz->id,
+                        'title' => $video->quiz->title,
+                        'questions' => $video->quiz->questions->map(function($q){
+                            return [
+                                'id' => $q->id,
+                                'text' => $q->text,
+'options' => is_string($q->option) ? json_decode($q->option, true) : $q->option,                                'correct_answer' => $q->correct_answer,
+                            ];
+                        })
+                    ] : null
+                ];
+            })
+        ]
+    ], 200);
 }
-
 
  public function updateCourse(courseRequest $request, $id)
 {
