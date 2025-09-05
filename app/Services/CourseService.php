@@ -23,7 +23,9 @@ class CourseService
         return false; // الزائر لم يشترِ الكورس
     }
 
-    return $user->enrollments()->where('course_id', $course->id)->exists();
+   return \App\Models\Enrolment::where('user_id', $user->id)
+                ->where('course_id', $course->id)
+                ->exists();
 }
     public function enrollUserInCourseWithPayment($course_id){
         $user=Auth()->user();
