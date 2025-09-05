@@ -43,8 +43,7 @@ class CourseReviewsController extends Controller
 
     if (!$allVideosCompleted) {
         return response()->json([
-            'message' => 'لا يمكنك تقييم هذا الكورس لأنك لم تُكمل جميع الدروس بعد'
-        ], 403);
+            'message' => 'You cannot rate this course because you have not completed the course yet.' ], 201);
     }
 
     // جلب آخر محتوى فيديو (الدرس الأخير)
@@ -85,8 +84,7 @@ class CourseReviewsController extends Controller
     );
 
     return response()->json([
-        'message' => 'تم إرسال تقييمك بنجاح'
-    ]);
+        'message' => 'Your rating has been submitted successfully.'  ],201);
 }
 
 }
