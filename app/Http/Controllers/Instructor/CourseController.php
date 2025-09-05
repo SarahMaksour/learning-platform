@@ -86,4 +86,14 @@ public function testUpload(Request $request) {
     }
     return ['error' => 'no file uploaded'];
 }
+
+public function deleteCourse($id)
+{
+    $course = Course::findOrFail($id);
+    $course->delete();
+
+    return response()->json([
+        'message' => 'Course deleted successfully'
+    ], 200);
+}
 }
