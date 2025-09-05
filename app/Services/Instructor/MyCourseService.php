@@ -99,7 +99,7 @@ if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
       /**
      * Update an existing course with videos and quizzes
      */
-    public function updateCourse(int $courseId, array $data)
+     } public function updateCourse(int $courseId, array $data)
     {
         return DB::transaction(function() use ($courseId, $data) {
 
@@ -209,6 +209,6 @@ if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
 
             return ['message' => 'course updated successfully'];
         });
-    }
+  
 
 }

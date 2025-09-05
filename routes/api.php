@@ -66,7 +66,7 @@ Route::post('/courses/{id}/pay', [CourseDetailsController::class, 'PayTheCourse'
 Route::get('/instructor/courses', [CourseController::class, 'getMyCourse']);
 Route::post('/add/courses', [CourseController::class, 'addCourse']);
     Route::post('/courses/{id}/update', [CourseController::class, 'update']);
-
+Route::get('/courses/{id}', [CourseController::class, 'getCourse']);
 });
 Route::post('/image', [CourseController::class, 'testUpload']);
 Route::get('/home', [HomeController::class, 'homePage']);
