@@ -26,7 +26,7 @@ class CourseContent extends Model
     }
     public function quiz()
     {
-        return $this->hasOne(Quiz::class);
+        return $this->hasOne(Quiz::class, 'content_id', 'id');
     }
     public function isPassedByUser($user)
 {
