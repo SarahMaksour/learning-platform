@@ -90,16 +90,12 @@ if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
             return ['message' => 'course add successfully'];
         });
     }
-     private function generateFileName($title, $extension)
-    {
-        $slug = Str::slug($title); // laravel-basics
-        $timestamp = now()->format('Ymd_His');
-        return "{$slug}_{$timestamp}.{$extension}";
-    }
+  
       /**
      * Update an existing course with videos and quizzes
      */
-     } public function updateCourse(int $courseId, array $data)
+    
+      public function updateCourse(int $courseId, array $data)
     {
         return DB::transaction(function() use ($courseId, $data) {
 
@@ -209,6 +205,11 @@ if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
 
             return ['message' => 'course updated successfully'];
         });
-  
-
+    }
+   private function generateFileName($title, $extension)
+    {
+        $slug = Str::slug($title); // laravel-basics
+        $timestamp = now()->format('Ymd_His');
+        return "{$slug}_{$timestamp}.{$extension}";
+    }
 }
