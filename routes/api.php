@@ -52,7 +52,7 @@ Route::post('/teacherDetail',[TeacherDetailController::class ,'storeOrUpdate']);
 Route::get('/quiz/{id}', [QuizController::class, 'show']);
 Route::post('/quiz/submit', [QuizController::class, 'submit']);
 Route::prefix('contents')->group(function () {
-    Route::get('{id}', [VideoContentController::class, 'show']);
+    
     Route::post('{id}/comment', [VideoContentController::class, 'storeComment']);
     Route::post('comments/{commentId}/reply', [VideoContentController::class, 'storeReply']);
 });
@@ -89,7 +89,7 @@ Route::get('/courseDetail/{id}' ,[CourseDetailsController::class,'getAboutCourse
 Route::get('/courseReview/{course_id}' , [CourseReviewsController::class , 'CourseReviews']);
 //Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
 Route::get('/courses/{id}/lessons', [CourseDetailsController::class, 'getCourseLesson']);
-
+Route::get('contents/{id}', [VideoContentController::class, 'show']);
 // فيديوهات
 Route::get('/media/videos/{filename}', function ($filename) {
     $path = '/mnt/volumes/media/videos/' . $filename;
@@ -112,12 +112,3 @@ Route::get('/media/images/{filename}', function ($filename) {
 
     return response()->file($path);
 });*/
-
-Route::get('/test-upload', function () {
-    $fileContents = "Hello Supabase";
-    $fileName = "test.txt";
-
-    Storage::disk('supabase')->put($fileName, $fileContents);
-
-    return Storage::disk('supabase')->url($fileName);
-});
