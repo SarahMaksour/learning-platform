@@ -33,17 +33,20 @@ class MyCourseService
 
         return DB::transaction(function () use ($data) {
            // ====== رفع صورة الكورس ======
-        $image = $data['image'] ?? null;
+           $image = $data['image'] ?? null;
         if (!$image instanceof \Illuminate\Http\UploadedFile) {
             throw new \Exception("Course image must be a valid uploaded file");
         }
 
         $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-
         Storage::disk('supabase')->put($imageName, file_get_contents($image->getPathname()));
 
-        $imageUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
-            $course = Course::create([
+       $imageUrl = env('SUPABASE_URL') 
+            . "/storage/v1/object/public/" 
+            . env('SUPABASE_BUCKET') 
+            . "/" . $imageName;
+
+                 $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
                 'description' => Arr::get($data, 'description'),
@@ -57,12 +60,14 @@ class MyCourseService
                 throw new \Exception("Video file is required for '{$videoData['title']}'");
             }
 
-            $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-
+           $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
             Storage::disk('supabase')->put($videoName, file_get_contents($videoFile->getPathname()));
 
-            $videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
-            // مدة الفيديو
+            $videoUrl = env('SUPABASE_URL') 
+                . "/storage/v1/object/public/" 
+                . env('SUPABASE_BUCKET') 
+                . "/" . $videoName;
+    // مدة الفيديو
             $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
             $durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
