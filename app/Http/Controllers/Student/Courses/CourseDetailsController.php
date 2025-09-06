@@ -38,7 +38,18 @@ public function getAboutCourse($id)
 
 public function getCourseLesson($course_id)
 {
-    $user = Auth::check() ? Auth::user() : null; 
+    // نجيب الـ user من Sanctum إذا مسجل دخول
+    $user = auth('sanctum')->user();
+
+   // إذا ما فيه user، نعمل guest object
+    if (!$user) {
+        $user = (object)[
+            'id' => 0,
+            'name' => 'Guest',
+            'email' => 'guest@example.com'
+        ];
+    }
+
     $lessons = $this->courseService->getCourseLessonsWithStatus($course_id, $user);
     return LessonStatusResource::collection($lessons);
 }

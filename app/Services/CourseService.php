@@ -58,8 +58,8 @@ public function getCourseLessonsWithStatus($course_id, $user)
     $lessons = $course->contents->sortBy('id')->values();
 
     // إذا المستخدم مسجّل دخول نتحقق إذا اشترى الكورس
-  $isPaid = $user ? $this->isUserPaid($user, $course) : false;
-    // إذا الزائر مو مسجّل دخول
+  $isPaid = ($user && $user->id != 0) ? $this->isUserPaid($user, $course) : false;
+  // إذا الزائر مو مسجّل دخول
   /*  if (!$user) {
         $lessons = $course->contents->sortBy('id')->values();
         foreach ($lessons as $index => $lesson) {
@@ -74,7 +74,7 @@ public function getCourseLessonsWithStatus($course_id, $user)
     foreach ($lessons as $index => $lesson) {
         $lesson->is_paid = $isPaid;
         $lesson->is_previous_lesson_passed = false;
-/*
+
         if ($isPaid) {
             if ($index === 0) {
                 $unlock = true;
@@ -84,11 +84,11 @@ public function getCourseLessonsWithStatus($course_id, $user)
             }
 
             $lesson->is_previous_lesson_passed = $unlock;
-        }*/
-            if ($isPaid && $index > 0) {
+        }
+         /*   if ($isPaid && $index > 0) {
             $previousLesson = $lessons[$index - 1];
             $lesson->is_previous_lesson_passed = $previousLesson->contentable->isPassedByUser($user);
-        }
+        }*/
 
 
         $lesson->videoNum = $index + 1;
