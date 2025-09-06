@@ -85,6 +85,7 @@ public function show()
             'bio'           => 'nullable|string|max:1000',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+        dd($request->all());
 $name = $request->input('name');
 $email = $request->input('email');
 $specialization = $request->input('specialization');
