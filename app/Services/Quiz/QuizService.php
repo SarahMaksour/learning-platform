@@ -112,7 +112,22 @@ class QuizService
                 ->where('quiz_id', $quiz_id)->first();
             if (!$question)
                 continue;
-            $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
+       //     $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
+ // options تبع السؤال
+        $options = json_decode($question->option, true) ?? [];
+
+        // الجواب اللي وصلني (index على شكل سترينغ)
+        $studentIndex = (int) $answer['student_answer'];
+
+        // إذا موجود بالمصفوفة نجيبه نص
+        $studentAnswerText = $options[$studentIndex] ?? null;
+
+        if ($studentAnswerText === null) {
+            continue; // إهمال لو الطالب بعت index غلط
+        }
+
+        // المقارنة: النص مع النص
+        $isCorrect = ((string) $question->correct_answer === (string) $studentAnswerText);
 
             if ($isCorrect) {
                 $correctCount++;
@@ -126,7 +141,8 @@ class QuizService
                     'question_id' => $question->id,
                 ],
                 [
-                    'student_answer' => $answer['student_answer'],
+                   // 'student_answer' => $answer['student_answer'],
+                   'student_answer' => $studentAnswerText,
                     'is_correct' => $isCorrect,
                 ]
             );
