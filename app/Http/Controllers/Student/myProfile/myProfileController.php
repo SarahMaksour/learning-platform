@@ -88,7 +88,7 @@ public function myFullyCompletedCourses()
 
 public function edit()
     {
-        $user = Auth::user();
+        $user =auth()->user();
 
         return response()->json([
             'id' => $user->id,
@@ -97,12 +97,13 @@ public function edit()
         ], 200);
     }
 
-   public function update(User $user,Request  $request)
+   public function update(User $user,Request $request)
 {
-    //$user = Auth::user();
+   // $user =auth()->user();
 
-    // تحديث البيانات مباشرة
-    $user->update($request->only(['name', 'email']));
+    $user->name  = $request->input('name', $user->name);
+    $user->email = $request->input('email', $user->email);
+    $user->save(); 
 
     return response()->json([
         'message' => 'data updated successfully',
