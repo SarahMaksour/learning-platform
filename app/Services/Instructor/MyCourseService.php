@@ -123,10 +123,11 @@ public function addCourse(array $data)
         if (!$image instanceof \Illuminate\Http\UploadedFile) {
             throw new \Exception("Course image must be a valid uploaded file");
         }
-
-        $imageUpload = $supabase->uploadImage($image);
-        $imageUrl = $supabase->getSignedUrl($image); // إذا الباكت public يمكن استعمال $imageUpload['Key'] مباشرة
-
+$imageUpload = $supabase->uploadImage($image);
+$imageUrl = env('SUPABASE_URL') 
+            . "/storage/v1/object/public/" 
+            . env('SUPABASE_BUCKET') 
+            . "/" . $image->getClientOriginalName();
         // ====== إنشاء الكورس ======
         $course = Course::create([
             'user_id' => Arr::get($data, 'user_id'),
@@ -144,8 +145,10 @@ public function addCourse(array $data)
             }
 
             $videoUpload = $supabase->uploadImage($videoFile); // نفس الدالة تستخدم للفيديو
-            $videoUrl = $supabase->getSignedUrl($videoFile);
-
+           $videoUrl = env('SUPABASE_URL') 
+            . "/storage/v1/object/public/" 
+            . env('SUPABASE_BUCKET') 
+            . "/" . $videoFile->getClientOriginalName();
             // ====== حساب مدة الفيديو ======
             $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
