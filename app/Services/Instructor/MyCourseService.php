@@ -38,8 +38,8 @@ class MyCourseService
             }
 
             $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-            Storage::disk('supabase')->put($imageName, file_get_contents($image));
-            $imageUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
+Storage::disk('supabase')->put($imageName, file_get_contents($image->getPathname()));
+$imageUrl = config('filesystems.disks.supabase.endpoint') . "/object/public/" . config('filesystems.disks.supabase.bucket') . "/" . $imageName;
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
