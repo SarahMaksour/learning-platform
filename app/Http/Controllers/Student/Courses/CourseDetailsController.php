@@ -25,7 +25,8 @@ public function getAboutCourse($id)
 {
     $courseDetail = $this->courseService->getAboutCourse($id);
 
-    $user = auth()->user(); // ممكن يكون null
+   $user = auth('sanctum')->user();
+ // ممكن يكون null
     $course = Course::findOrFail($id);
 
     $is_paid = $user ? $this->courseService->isUserPaid($user, $course) : false;
