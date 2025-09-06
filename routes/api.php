@@ -73,7 +73,7 @@ Route::delete('/courses/{courseId}/lessons/{contentId}', [CourseController::clas
 Route::post('/wallet/withdraw', [myProfile::class, 'withdraw']);
 Route::post('/courses/{course_id}/review', [CourseReviewsController::class, 'store']);
 
- Route::put('/instructor/profile/{user}', [myProfile::class, 'update']);
+ Route::post('/instructor/profile/{user}', [myProfile::class, 'update']);
 
     // تحديث بيانات الطالب
     Route::put('/student/profile', [myProfileController::class, 'update']);
