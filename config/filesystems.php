@@ -47,12 +47,11 @@ return [
        
      'supabase' => [
     'driver' => 's3',
-    'key'    => env('SUPABASE_KEY'),
-    'secret' => env('SUPABASE_KEY'),
-    'region' => 'us-east-1', // أي قيمة افتراضية، Supabase ما بيتطلب region
-    'bucket' => env('SUPABASE_BUCKET'),
-    'url'    => env('SUPABASE_URL') . '/storage/v1/object/public/' . env('SUPABASE_BUCKET'),
-    'endpoint' => env('SUPABASE_URL') . '/storage/v1/s3',
+    'key' => env('SUPABASE_KEY'),
+    'secret' => env('SUPABASE_KEY'), // نفس المفتاح غالبًا
+    'region' => env('SUPABASE_REGION', 'us-east-1'),
+    'bucket' => env('SUPABASE_BUCKET'), // لازم يكون موجود
+    'endpoint' => env('SUPABASE_URL') . '/storage/v1',
     'use_path_style_endpoint' => true,
 ],
 
