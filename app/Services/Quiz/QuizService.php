@@ -74,8 +74,13 @@ class QuizService
 
         $formattedQuestions = [];
         foreach ($questions as  $question) {
-            $options = $question->option;
+
+         /*   $options = $question->option;
             $correct_answer = $question->correct_answer;
+*/
+            $options = json_decode($question->option, true) ?? [];
+        $correct_answer = $question->correct_answer;
+
             $answers = [];
             foreach ($options as $key => $value) {
                 $answers[] = [
