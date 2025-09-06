@@ -123,7 +123,9 @@ if (!$userDetail) {
                                 ? asset('/' . $user->userDetail->image)  
                                 : null,  
   //      'image_course' =>$user->userDetail->image? asset($this->image) : null,
-
+'specialization'=> $user->UserDetail->specialization,
+            'bio'           =>  $user->UserDetail->bio,
+           
         ]);  
     }  
 }

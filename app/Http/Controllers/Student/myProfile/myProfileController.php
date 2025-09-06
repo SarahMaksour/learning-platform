@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student\myProfile;
 
 use App\Models\Video;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
