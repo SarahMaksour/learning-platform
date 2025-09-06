@@ -47,7 +47,7 @@ return [
        
      'supabase' => [
     'driver' => 's3',
-   'key' => env('SUPABASE_KEY'),
+ 'key' => env('SUPABASE_SERVICE_ROLE_KEY'),
 'secret' => env('SUPABASE_SERVICE_ROLE_KEY'),
  'region' => env('SUPABASE_REGION', 'us-east-1'),
     'bucket' => env('SUPABASE_BUCKET'), // لازم يكون موجود
