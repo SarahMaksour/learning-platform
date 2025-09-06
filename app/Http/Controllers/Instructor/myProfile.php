@@ -77,6 +77,11 @@ public function show()
     {
        // $user = Auth::user();
   //dd($request->all());
+  dd([
+    'all_fields' => $request->all(),       // الحقول العادية
+    'post_fields' => $request->post(),     // بيانات POST فقط
+    'files'       => $request->allFiles(), // الملفات
+]);
         // التحقق من صحة البيانات
        $request->validate([
             'name'          => 'required|string|max:255',
