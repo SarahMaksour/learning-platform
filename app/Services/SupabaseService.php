@@ -20,26 +20,26 @@ class SupabaseService
     $this->bucketName = env('SUPABASE_BUCKET');
   }
 
-  public function uploadImage($file)
-  {
+ public function uploadImage($file, $customName = null)
+{
     Log::info("uploading file to supabase: {$file}");
-    $filepath = $file->getClientOriginalName();
+    
+    // إذا تم تمرير اسم مخصص استخدمه، وإلا استخدم الاسم الأصلي
+    $filepath = $customName ?? $file->getClientOriginalName();
 
     $response = Http::withHeaders([
-      'Authorization' => 'Bearer ' . $this->apiKey,
+        'Authorization' => 'Bearer ' . $this->apiKey,
     ])
-      ->attach('file', $file->get(), $file->getClientOriginalName())
-      ->post(
-        "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}"
-      );
+    ->attach('file', $file->get(), $filepath)
+    ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}");
 
     if ($response->successful()) {
-      return $response->json();
+        return $response->json();
     } else {
-      // Handle the case where the upload was not successful
-      throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
+        throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
     }
-  }
+}
+
 
   public function getSignedUrl($file)
   {
