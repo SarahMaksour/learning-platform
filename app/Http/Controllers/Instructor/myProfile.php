@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Instructor;
 
+use App\Models\User;
 use App\Models\Wallet;
 use App\Models\UserDetail;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -71,9 +73,9 @@ public function show()
         ], 200);
     }
 
-   public function update(Request $request)
+   public function update(User $user,Request $request)
     {
-        $user = Auth::user();
+       // $user = Auth::user();
 
         // التحقق من صحة البيانات
         $request->validate([
