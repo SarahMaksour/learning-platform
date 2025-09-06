@@ -3,8 +3,9 @@
 use Illuminate\Http\Request;
 use App\Services\CourseReview;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Instructor\myProfile;
+use Illuminate\Support\Facades\Storage;
 
+use App\Http\Controllers\Instructor\myProfile;
 use App\Http\Controllers\TeacherDetailController;
 use App\Http\Controllers\Instructor\CourseController;
 use App\Http\Controllers\Student\Auth\AuthController;
@@ -111,3 +112,12 @@ Route::get('/media/images/{filename}', function ($filename) {
 
     return response()->file($path);
 });*/
+
+Route::get('/test-upload', function () {
+    $fileContents = "Hello Supabase";
+    $fileName = "test.txt";
+
+    Storage::disk('supabase')->put($fileName, $fileContents);
+
+    return Storage::disk('supabase')->url($fileName);
+});
