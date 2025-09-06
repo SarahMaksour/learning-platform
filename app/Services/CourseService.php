@@ -54,7 +54,7 @@ public function isUserPaid($user, $course): bool
 }
 public function getCourseLessonsWithStatus($course_id, $user)
 {
- $course = Course::with('contents.contentable')->findOrFail($course_id);
+ $course = Course::with('contents')->findOrFail($course_id);
     $lessons = $course->contents->sortBy('id')->values();
 
     // إذا المستخدم مسجّل دخول نتحقق إذا اشترى الكورس
