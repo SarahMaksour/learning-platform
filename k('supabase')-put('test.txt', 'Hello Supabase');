@@ -1,0 +1,168 @@
+[33mdc386c2[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m remove large files from repo history
+[33meaafa2f[m update gitignore to ignore videos, images, and bin
+[33m60a40a0[m add course
+[33md0ad16e[m add course
+[33m38bf9e3[m fix add course
+[33m37d6335[m fix teacherDetail
+[33m879cd8f[m fix teacherDetail
+[33m8560169[m[33m ([m[1;31morigin/main[m[33m)[m fix teacherDetail
+[33me8c99d3[m fix teacherDetail
+[33m8f3b7df[m fix teacherDetail
+[33mb45a61a[m fix teacherDetail
+[33m7b3a03e[m fix teacherDetail
+[33mb9f1cb1[m update login
+[33m58126ec[m update login
+[33m39c1c14[m edit2
+[33mcce914c[m editrole2
+[33mb09e8a2[m editrole
+[33m14a214e[m add course section for instructor
+[33m462ea9d[m add course section for instructor
+[33m8872242[m add course section for instructor
+[33m4c1a248[m add course section for instructor
+[33m7610fd5[m add course section for instructor
+[33m8e8cdf9[m add course section for instructor
+[33m39b515e[m add course section for instructor
+[33m8553925[m add course section for instructor
+[33m3af1069[m add course section for instructor
+[33mc5f6489[m add course section for instructor
+[33mca36ec5[m add course section for instructor
+[33ma92f0c8[m add course section for instructor
+[33m51d8d2d[m add course section for instructor
+[33ma44bd70[m add course section for instructor
+[33m1a5cc33[m add course section for instructor
+[33md2145ee[m add course section for instructor
+[33m405481f[m add course section for instructor
+[33m5b1e570[m add course section for instructor
+[33m9cac775[m add course section for instructor
+[33meb0039e[m merge mycourseInstructor with main branch
+[33m2d60859[m merge mycourseInstructor with main branch
+[33m266cebc[m merge mycourseInstructor with main branch
+[33mab4ed58[m merge mycourseInstructor with main branch
+[33m8fc05a5[m Merge branch 'feature/myCourseInstructor'
+[33m7ededfe[m[33m ([m[1;31morigin/feature/myCourseInstructor[m[33m, [m[1;32mfeature/myCourseInstructor[m[33m)[m add mycourseInstructor section
+[33m65eb87e[m edit filter section
+[33mc43abfa[m edit filter section
+[33m46c1a55[m update pay section
+[33me430a62[m e
+[33mb612a49[m filter
+[33m61b1e20[m filter
+[33m83dda68[m filter
+[33m5288453[m Move controllers to the student folder
+[33mb19c488[m Move controllers to the student folder
+[33mabd98f0[m add enrolment course
+[33m6e8aa9a[m add enrolment course
+[33mea65999[m add enrolment course
+[33m2b1c20d[m add enrolment course
+[33mad1480c[m add enrolment course
+[33mc04f55b[m add enrolment course
+[33m4989959[m add enrolment course
+[33mb21cfb8[m add enrolment course
+[33mdee5a57[m add enrolment course
+[33m9cf6904[m add enrolment course
+[33ma2c97d2[m merge main with feature/CourseDetailsLesson
+[33m8127b54[m merge main with feature/CourseDetailsLesson
+[33m89ee782[m merge main with feature/CourseDetailsLesson
+[33m162c341[m merge main with feature/CourseDetailsLesson
+[33m34f7f50[m merge main with feature/CourseDetailsLesson
+[33m4d740d8[m[33m ([m[1;31morigin/feature/CourseDetailsLesson[m[33m, [m[1;32mfeature/CourseDetailsLesson[m[33m)[m add CourseDetailsLesson section
+[33ma66c15e[m fix walllet and search
+[33mc37e450[m fix walllet and search
+[33m3f090ab[m fix walllet and search
+[33m1084495[m fix walllet and search
+[33md1eb81a[m fix walllet and search
+[33m43a527a[m fix walllet and search
+[33m20e7064[m fix walllet and search
+[33mc2da653[m fix search
+[33m1a0942e[m add section get wallet for user
+[33mcdd5681[m fix search
+[33m33116e6[m fix search
+[33ma7c1d0b[m fix search
+[33md5c7562[m fix search
+[33m4e9ea25[m Add index file for TNTSearch
+[33ma6eda92[m fix search
+[33m3ad3e75[m add TNTSearch for search instade of milisearch
+[33m03b7625[m add scout and Meilisearch for search
+[33m5b365c5[m update quiz
+[33m54d4a32[m change quezwithquestion
+[33m9c742b2[m change quezwithquestion
+[33mf4e9a54[m update and fix search
+[33m2f8db6c[m update and fix search
+[33md10f9ed[m[33m ([m[1;31morigin/feature/wallet[m[33m, [m[1;32mfeature/wallet[m[33m)[m add wallet/recharge in my profile
+[33m92fc0b0[m add wallet/recharge in my profile
+[33m326fabc[m add wallet/recharge in my profile
+[33mb6fb98b[m add wallet/recharge in my profile
+[33m63fdaf3[m add wallet/recharge in my profile
+[33md2c7935[m add wallet/recharge in my profile
+[33m6b461b5[m add wallet/recharge in my profile
+[33mf222001[m[33m ([m[1;31morigin/feature/myProfile[m[33m, [m[1;32mfeature/myProfile[m[33m)[m add myProfile
+[33m5f0180c[m merge feature/videoContentDetail to main branch
+[33m7e8e1f0[m merge feature/videoContentDetail to main branch
+[33me77593d[m merge feature/videoContentDetail to main branch
+[33m7840318[m Merge branch 'feature/videoContentDetail'
+[33mca30612[m[33m ([m[1;31morigin/feature/videoContentDetail[m[33m, [m[1;32mfeature/videoContentDetail[m[33m)[m fix images
+[33m7472aa0[m fix images
+[33mcda3c14[m fix images
+[33mcd0b6dd[m fix images
+[33mdfb06cd[m add comment
+[33mb28980e[m add images to user
+[33m3de4128[m add images to user
+[33maab31e7[m add images to user
+[33m06f38a1[m update replais in video detiles
+[33m8d79618[m update replais in video detiles
+[33m8ff3052[m update replais in video detiles
+[33m868ab92[m update discussion
+[33mc6fa01b[m update videos
+[33m3a361cc[m Add video 2.mp4
+[33m6b1c410[m Add video manually
+[33m838cbda[m Fix gitignore to allow video uploads
+[33m91764f3[m Fix gitignore to allow video uploads
+[33m7a188ba[m Add video file manually
+[33mdb386a2[m update vedio content
+[33m8d2cf78[m update vedio content
+[33m2470980[m update vedio content
+[33mc313dc0[m update vedio content
+[33m7e3a8a1[m update vedio content
+[33mfb00602[m update searchcontroller
+[33md4a62d2[m update searchcontroller
+[33mb92f206[m bio to instructor, i update coursedetailresource
+[33m1331e2c[m Add dart image
+[33m7700aa7[m Add dart image
+[33m4f2b9c2[m testee RAILWAY
+[33ma52f535[m testee RAILWAY
+[33mea0f3f9[m testee RAILWAY
+[33ma929882[m testee RAILWAY
+[33me83aa0c[m تعديلات جديدة
+[33m1477e97[m Add DB test route
+[33m62df11d[m add video content and all things related
+[33m30ecdb4[m add video content and all things related with
+[33m66e35cb[m merge filter branch  with main branch
+[33m5998307[m Merge branch 'feature/filter'
+[33m853d245[m merge search branch  with main branch
+[33m549379d[m Merge branch 'feature/search'
+[33m0e9cbcc[m merge lessonCourse with main branch
+[33m6fd4f61[m[33m ([m[1;32mfeature/videoDetail[m[33m)[m merge quiz branch with main branch
+[33maa93e95[m merge quiz branch with main branch
+[33m8e49ab3[m Merge branch 'feature/quiz'
+[33m8917d0c[m[33m ([m[1;31morigin/feature/quiz[m[33m, [m[1;32mfeature/quiz[m[33m)[m add quiz and all things related in quiz
+[33mdc09f34[m merge feature/reviews with main
+[33m6485b2b[m Merge branch 'feature/reviews'
+[33m7e8162b[m add quiz and student answer and finalscore
+[33m5f71ca5[m update Docker add route web
+[33m561be0f[m update Docker add route web
+[33m469351b[m update Docker add route web
+[33m3068e59[m update Docker
+[33mc699da2[m update Docker
+[33meaf88e0[m update Docker
+[33m283dd33[m update Docker
+[33ma857216[m Add Docker support for Railway (PHP 8.2)
+[33m5d3a008[m[33m ([m[1;31morigin/feature/lessonCourse[m[33m, [m[1;32mfeature/lessonCourse[m[33m)[m add all thinge for leesonCourse in coursedetails
+[33mec71e86[m[33m ([m[1;31morigin/feature/course-details[m[33m, [m[1;32mfeature/course-details[m[33m)[m add coursedetails and changes all thing related
+[33m99469f7[m[33m ([m[1;32mfeature/course-detalies[m[33m)[m add role column to user table
+[33mdef9367[m Merge feature/choose role into main
+[33m4965855[m[33m ([m[1;32mfeature/CourseDetails[m[33m)[m all things
+[33m2fa1403[m[33m ([m[1;31morigin/feature/home_page[m[33m, [m[1;32mfeature/home_page[m[33m)[m meerge home_page and viewall
+[33m41a6a20[m add userresource
+[33m24593c0[m test
+[33ma65e3fe[m home page
+[33mf4514a0[m fix files
+[33mab950e1[m[33m ([m[1;31morigin/fix/tables
