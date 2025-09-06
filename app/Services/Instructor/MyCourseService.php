@@ -32,15 +32,17 @@ class MyCourseService
     {
 
         return DB::transaction(function () use ($data) {
-            $image = $data['image'] ?? null;
-            if (!$image) {
-                throw new \Exception("Course image is required");
-            }
+           // ====== رفع صورة الكورس ======
+        $image = $data['image'] ?? null;
+        if (!$image instanceof \Illuminate\Http\UploadedFile) {
+            throw new \Exception("Course image must be a valid uploaded file");
+        }
 
-            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-Storage::disk('supabase')->put($imageName, file_get_contents($image->getPathname()));
-$imageUrl = config('filesystems.disks.supabase.endpoint') . "/object/public/" . config('filesystems.disks.supabase.bucket') . "/" . $imageName;
+        $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
 
+        Storage::disk('supabase')->put($imageName, file_get_contents($image->getPathname()));
+
+        $imageUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
@@ -52,15 +54,14 @@ $imageUrl = config('filesystems.disks.supabase.endpoint') . "/object/public/" . 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
                 $videoFile = $videoData['video'] ?? null;
                 if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
-                    throw new \Exception("Video file is required for '{$videoData['title']}'");
-                }
-              
-$videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+                throw new \Exception("Video file is required for '{$videoData['title']}'");
+            }
 
-// رفع الفيديو إلى Supabase
-Storage::disk('supabase')->put($videoName, file_get_contents($videoFile->getPathname()));
+            $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
 
-$videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
+            Storage::disk('supabase')->put($videoName, file_get_contents($videoFile->getPathname()));
+
+            $videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
             // مدة الفيديو
             $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
