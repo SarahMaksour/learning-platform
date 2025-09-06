@@ -30,5 +30,13 @@ public function quiz()
         'id'                  // المفتاح المحلي في CourseContent
     )->where('contentable_type', self::class);
 }
+public function isPassedByUser($user)
+{
+    return $this->courseContent
+        ->studentProgress()
+        ->where('user_id', $user->id)
+        ->where('is_passed', true)
+        ->exists();
+}
 
 }

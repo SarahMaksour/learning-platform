@@ -17,16 +17,12 @@ class CourseService
         ->findOrFail($id);
 
     }
-      public function isUserPaid($user, $course): bool
+public function isUserPaid($user, $course): bool
 {
-    if (!$user) {
-        return false; // الزائر لم يشترِ الكورس
-    }
-
-   return \App\Models\Enrolment::where('user_id', $user->id)
-                ->where('course_id', $course->id)
-                ->exists();
+    if (!$user) return false;
+    return $user->enrollments()->where('course_id', $course->id)->exists();
 }
+
     public function enrollUserInCourseWithPayment($course_id){
         $user=Auth()->user();
         $course=Course::findOrFail($course_id);
@@ -58,11 +54,11 @@ class CourseService
 }
 public function getCourseLessonsWithStatus($course_id, $user)
 {
-    $course = Course::with('contents')->findOrFail($course_id);
- $lessons = $course->contents->sortBy('id')->values();
+ $course = Course::with('contents.contentable')->findOrFail($course_id);
+    $lessons = $course->contents->sortBy('id')->values();
 
     // إذا المستخدم مسجّل دخول نتحقق إذا اشترى الكورس
-   $isPaid = $this->isUserPaid($user, $course);
+  $isPaid = $user ? $this->isUserPaid($user, $course) : false;
     // إذا الزائر مو مسجّل دخول
   /*  if (!$user) {
         $lessons = $course->contents->sortBy('id')->values();
@@ -74,14 +70,11 @@ public function getCourseLessonsWithStatus($course_id, $user)
         return $lessons;
     }
 */
-    // إذا المستخدم مسجّل دخول
-    $isPaid = $this->isUserPaid($user, $course);
-    $lessons = $course->contents->sortBy('id')->values();
-
+  
     foreach ($lessons as $index => $lesson) {
         $lesson->is_paid = $isPaid;
         $lesson->is_previous_lesson_passed = false;
-
+/*
         if ($isPaid) {
             if ($index === 0) {
                 $unlock = true;
@@ -91,7 +84,12 @@ public function getCourseLessonsWithStatus($course_id, $user)
             }
 
             $lesson->is_previous_lesson_passed = $unlock;
+        }*/
+            if ($isPaid && $index > 0) {
+            $previousLesson = $lessons[$index - 1];
+            $lesson->is_previous_lesson_passed = $previousLesson->contentable->isPassedByUser($user);
         }
+
 
         $lesson->videoNum = $index + 1;
     }
