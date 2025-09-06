@@ -148,7 +148,14 @@ class QuizService
         $status = $score >= 60 ? 'passed' : 'failed';
         if ($status === 'passed') {
             $quiz = Quiz::find($quizId);
-$lesson =  $quiz->content;
+if (!$quiz) {
+    // يمكن تسجيل اللوج أو تجاهل بدون exception
+    return;
+}
+$lesson = $quiz->content;
+if (!$lesson) {
+    return;
+}
            // $lesson = CourseContent::where('quiz_id', $quizId)->first();
             if ($lesson) {
                 StudentLessonProgress::updateOrCreate(
