@@ -108,8 +108,8 @@ if (!$userDetail) {
         $userDetail->save();
 
         return response()->json([
-            'message' => 'تم تعديل بياناتك بنجاح'
-        ]);
+          'message' => 'data updated successfully',
+          ]);
     }
     public function showProfile()  
     {  
