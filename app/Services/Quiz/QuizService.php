@@ -85,7 +85,7 @@ class QuizService
             foreach ($options as $key => $value) {
                 $answers[] = [
                     'answer' => $value,
-                    'is_correct' => ($key == $correct_answer)
+                    'is_correct' => ($value == $correct_answer)
                 ];
             }
             $formattedQuestions[] = [
