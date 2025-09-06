@@ -33,9 +33,10 @@ return response()->json([
         $data['image'] = $request->file('image');
     }
 
-    if ($request->has('videos')) {
-        $data['videos'] = $request->videos; // videos جاي من الفلاتر (مصفوفة)
-    }
+  if ($request->hasFile('videos')) {
+    $data['videos'] = $request->file('videos'); // array of UploadedFile
+}
+
 
 $response=$this->myCourseService->addCourse($data);
 return response()->json(

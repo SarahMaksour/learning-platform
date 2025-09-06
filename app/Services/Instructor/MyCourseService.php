@@ -54,14 +54,13 @@ class MyCourseService
                 if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
                     throw new \Exception("Video file is required for '{$videoData['title']}'");
                 }
-              if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
-                throw new \Exception("Video file is required for '{$videoData['title']}'");
-            }
+              
+$videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
 
-            $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-            Storage::disk('supabase')->put($videoName, file_get_contents($videoFile));
-            $videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
+// رفع الفيديو إلى Supabase
+Storage::disk('supabase')->put($videoName, file_get_contents($videoFile->getPathname()));
 
+$videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
             // مدة الفيديو
             $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
