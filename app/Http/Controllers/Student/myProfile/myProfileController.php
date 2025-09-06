@@ -80,7 +80,9 @@ public function myFullyCompletedCourses()
             );
 
         return $allVideosCompleted && $allQuizzesPassed;
-    })->map(function ($course) {
+
+    })
+    ->map(function ($course) {
         return [
             'id'         => $course->id,
             'title'      => $course->title,
