@@ -96,30 +96,20 @@ public function edit()
         ], 200);
     }
 
-      public function update(Request $request)
-    {
-        $user = Auth::user();
+   public function update(Request $request)
+{
+    $user = Auth::user();
 
-        // التحقق من صحة البيانات
-        $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($user->id),
-            ],
-        ]);
+    // تحديث البيانات مباشرة
+    $user->update($request->only(['name', 'email']));
 
-        // تحديث البيانات
-        $user->update($validated);
-
-        return response()->json([
-            'message' => 'تم تحديث بياناتك بنجاح',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ]
-        ], 200);
-    }
+    return response()->json([
+        'message' => 'data updated successfully',
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]
+    ], 200);
+}
 }
