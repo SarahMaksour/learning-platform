@@ -33,10 +33,10 @@ $image = request()->file('image');
 if (!$image) {
     throw new \Exception("Course image is required");
 }
-        $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-        $imagePath = $image->storeAs('images/courses', $imageName, 'public');
-        $imageUrl = Storage::url($imagePath);
-    
+      $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+        Storage::disk('supabase')->put($imageName, file_get_contents($image));
+        $imageUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
+
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
@@ -50,20 +50,21 @@ $videoFile = $videoData['video'] ?? null;
 if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
     throw new \Exception("Video file is required for '{$videoData['title']}'");
 }
-                $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-                $videoPath = $videoFile->storeAs('videos', $videoName, 'public');
-                $videoUrl = Storage::url($videoPath);
+                  $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+            Storage::disk('supabase')->put($videoName, file_get_contents($videoFile));
+            $videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
+
 // حساب المدة باستخدام getID3
 $getID3 = new \getID3;
-$fileInfo = $getID3->analyze(storage_path('app/public/' . $videoPath));
-$durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
+            $fileInfo = $getID3->analyze($videoFile->getPathname());
+            $durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
 
                 $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
                         'description' => Arr::get($videoData, 'description'), 
                     'video_path'  => $videoUrl,
-                'duration'    => $durationSeconds,
+               'duration'    => $durationSeconds,
                 ]);
 
                 $content = CourseContent::create([

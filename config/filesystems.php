@@ -55,6 +55,17 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
+        'supabase' => [
+    'driver' => 's3',
+    'key' => env('SUPABASE_KEY'),
+    'secret' => env('SUPABASE_SECRET'),
+    'region' => 'us-east-1', // أي قيمة تمشي
+    'bucket' => env('SUPABASE_BUCKET'),
+    'url' => env('SUPABASE_URL') . '/storage/v1/s3',
+    'endpoint' => env('SUPABASE_URL') . '/storage/v1/s3',
+    'use_path_style_endpoint' => true,
+],
+
 
     ],
 
