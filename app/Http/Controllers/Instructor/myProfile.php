@@ -78,14 +78,14 @@ public function show()
        // $user = Auth::user();
 
         // التحقق من صحة البيانات
-        $request->validate([
+    /*    $request->validate([
             'name'          => 'required|string|max:255',
             'email'         => 'required|email|unique:users,email,' . $user->id,
             'specialization'=> 'nullable|string|max:255',
             'bio'           => 'nullable|string|max:1000',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
+*/
         // تحديث جدول users
  $user->name  = $request->name;
 $user->email = $request->email;
