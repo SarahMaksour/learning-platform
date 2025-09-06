@@ -80,6 +80,14 @@ public function myFullyCompletedCourses()
             );
 
         return $allVideosCompleted && $allQuizzesPassed;
+    })->map(function ($course) {
+        return [
+            'id'         => $course->id,
+            'title'      => $course->title,
+            'image'      => $course->image, // تأكد إنه عندك accessor أو full path
+            'instructor' => $course->instructor->name ?? '',
+        //    'progress'   => $course->progress ?? 0, // إذا عندك حسبة progress
+        ];
     })
     ->values();
 
