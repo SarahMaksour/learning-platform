@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use GuzzleHttp\Psr7\Request;
 use App\Models\CourseContent;
+use App\Services\SupabaseService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,7 +29,7 @@ class MyCourseService
             ->get(['id', 'title', 'price', 'image', 'user_id']);
     }
 
-    public function addCourse(array $data)
+    /*public function addCourse(array $data)
     {
 
         return DB::transaction(function () use ($data) {
@@ -106,12 +107,89 @@ class MyCourseService
 
             return ['message' => 'course add successfully'];
         });
-    }
+    }*/
 
     /**
      * Update an existing course with videos and quizzes
      */
+public function addCourse(array $data)
+{
+    $supabase = new SupabaseService();
 
+    return DB::transaction(function () use ($data, $supabase) {
+
+        // ====== رفع صورة الكورس ======
+        $image = $data['image'] ?? null;
+        if (!$image instanceof \Illuminate\Http\UploadedFile) {
+            throw new \Exception("Course image must be a valid uploaded file");
+        }
+
+        $imageUpload = $supabase->uploadImage($image);
+        $imageUrl = $supabase->getSignedUrl($image); // إذا الباكت public يمكن استعمال $imageUpload['Key'] مباشرة
+
+        // ====== إنشاء الكورس ======
+        $course = Course::create([
+            'user_id' => Arr::get($data, 'user_id'),
+            'title' => Arr::get($data, 'title'),
+            'description' => Arr::get($data, 'description'),
+            'price' => Arr::get($data, 'price'),
+            'image' => $imageUrl,
+        ]);
+
+        // ====== رفع الفيديوهات ======
+        foreach (Arr::get($data, 'videos', []) as $videoData) {
+            $videoFile = $videoData['video'] ?? null;
+            if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
+                throw new \Exception("Video file is required for '{$videoData['title']}'");
+            }
+
+            $videoUpload = $supabase->uploadImage($videoFile); // نفس الدالة تستخدم للفيديو
+            $videoUrl = $supabase->getSignedUrl($videoFile);
+
+            // ====== حساب مدة الفيديو ======
+            $getID3 = new \getID3;
+            $fileInfo = $getID3->analyze($videoFile->getPathname());
+            $durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
+
+            // ====== إنشاء الفيديو ======
+            $video = Video::create([
+                'course_id' => $course->id,
+                'title' => Arr::get($videoData, 'title'),
+                'description' => Arr::get($videoData, 'description'),
+                'video_path' => $videoUrl,
+                'duration' => $durationSeconds,
+            ]);
+
+            // ====== إضافة محتوى للكورس ======
+            $content = CourseContent::create([
+                'course_id' => $course->id,
+                'contentable_id' => $video->id,
+                'contentable_type' => Video::class,
+            ]);
+
+            // ====== إضافة Quiz إذا موجود ======
+            if ($quizData = Arr::get($videoData, 'quiz')) {
+                $quiz = Quiz::create([
+                    'course_id' => $course->id,
+                    'content_id' => $content->id,
+                    'title' => Arr::get($quizData, 'title'),
+                    'type' => 'lesson',
+                ]);
+
+                foreach (Arr::get($quizData, 'questions', []) as $q) {
+                    Question::create([
+                        'quiz_id' => $quiz->id,
+                        'text' => Arr::get($q, 'text'),
+                        'option' => json_encode(Arr::get($q, 'options', [])),
+                        'correct_answer' => Arr::get($q, 'correct_answer'),
+                    ]);
+                }
+            }
+        }
+
+        return ['message' => 'course added successfully'];
+    });
+}
     public function updateCourse(int $courseId, array $data)
     {
         return DB::transaction(function () use ($courseId, $data) {
