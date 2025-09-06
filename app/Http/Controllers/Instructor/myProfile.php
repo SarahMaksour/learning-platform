@@ -7,8 +7,9 @@ use App\Models\Wallet;
 use App\Models\UserDetail;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Services\SupabaseService;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -73,7 +74,7 @@ public function show()
         ], 200);
     }
 
-   public function update(User $user,Request $request)
+  /* public function update(User $user,Request $request)
     {
        // $user = Auth::user();
   //dd($request->all());
@@ -116,8 +117,68 @@ if (!$userDetail) {
         return response()->json([
           'message' => 'data updated successfully',
           ]);
+    }*/
+    
+    
+    public function update(User $user, Request $request)
+{
+    // التحقق من صحة البيانات
+    $request->validate([
+        'name'           => 'required|string|max:255',
+        'email'          => 'required|email|unique:users,email,' . $user->id,
+        'specialization' => 'nullable|string|max:255',
+        'bio'            => 'nullable|string|max:1000',
+        'image'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $name = $request->input('name');
+    $email = $request->input('email');
+    $specialization = $request->input('specialization');
+    $bio = $request->input('bio');
+
+    // تحديث جدول users
+    $user->name  = $name;
+    $user->email = $email;
+    $user->save();
+
+    // جلب التفاصيل الخاصة بالمستخدم
+    $userDetail = $user->userDetail ?? new UserDetail(['user_id' => $user->id]);
+
+    // رفع الصورة إلى Supabase إذا موجودة
+    if ($request->hasFile('image')) {
+        $supabase = new SupabaseService();
+        $imageFile = $request->file('image');
+        $imageName = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+
+        // رفع الصورة
+        $supabase->uploadImage($imageFile, $imageName);
+
+        // رابط مباشر للصورة
+        $imageUrl = env('SUPABASE_URL') 
+                    . "/storage/v1/object/public/" 
+                    . env('SUPABASE_BUCKET') 
+                    . "/" . $imageName;
+
+        $userDetail->image = $imageUrl;
     }
-    public function showProfile()  
+
+    // تحديث باقي الحقول
+    $userDetail->specialization = $specialization;
+    $userDetail->bio = $bio;
+    $userDetail->save();
+
+    return response()->json([
+        'message' => 'Data updated successfully',
+        'data' => [
+            'name' => $user->name,
+            'email' => $user->email,
+            'specialization' => $userDetail->specialization,
+            'bio' => $userDetail->bio,
+            'image_url' => $userDetail->image,
+        ]
+    ], 200);
+}
+          public function showProfile()  
     {  
         $user = Auth::user();  
 
