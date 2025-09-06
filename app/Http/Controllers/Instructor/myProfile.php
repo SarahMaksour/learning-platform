@@ -76,7 +76,7 @@ public function show()
    public function update(User $user,Request $request)
     {
        // $user = Auth::user();
-  dd($request->all());
+  //dd($request->all());
         // التحقق من صحة البيانات
        $request->validate([
             'name'          => 'required|string|max:255',
