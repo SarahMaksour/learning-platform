@@ -97,9 +97,9 @@ public function edit()
         ], 200);
     }
 
-   public function update(Request $request)
+   public function update(User $user,Request  $request)
 {
-    $user = Auth::user();
+    //$user = Auth::user();
 
     // تحديث البيانات مباشرة
     $user->update($request->only(['name', 'email']));
