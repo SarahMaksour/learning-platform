@@ -85,10 +85,13 @@ public function show()
             'bio'           => 'nullable|string|max:1000',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
+$name = $request->input('name');
+$email = $request->input('email');
+$specialization = $request->input('specialization');
+$bio = $request->input('bio');
         // تحديث جدول users
- $user->name  = $request->name;
-$user->email = $request->email;
+ $user->name  = $name;
+$user->email = $email;
 $user->save();
 
         // جلب التفاصيل الخاصة بالمستخدم
@@ -104,8 +107,8 @@ if (!$userDetail) {
             $userDetail->image = $path;
         }
 
-        $userDetail->specialization = $request->specialization;
-        $userDetail->bio = $request->bio;
+        $userDetail->specialization = $specialization;
+        $userDetail->bio = $bio;
 
         $userDetail->save();
 
