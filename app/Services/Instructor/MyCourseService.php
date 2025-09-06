@@ -13,70 +13,77 @@ use App\Models\CourseContent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class MyCourseService{
-    public function getMyCourse(){
-        $user=Auth()->user();
-        $user_id=$user->id;
-        
-         return Course::withCount('enrollments')
+class MyCourseService
+{
+    public function getMyCourse()
+    {
+        $user = Auth()->user();
+        $user_id = $user->id;
+
+        return Course::withCount('enrollments')
             ->withAvg('reviews', 'rating')
             ->with('instructor:id,name')
-            ->where('user_id',$user_id)
+            ->where('user_id', $user_id)
             ->orderByDesc('enrollments_count')
             ->get(['id', 'title', 'price', 'image', 'user_id']);
     }
 
-    public function addCourse(array $data){
- 
- return DB::transaction(function () use ($data) {
-$image = request()->file('image');
-if (!$image) {
-    throw new \Exception("Course image is required");
-}
-      $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-        Storage::disk('supabase')->put($imageName, file_get_contents($image));
-        $imageUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
+    public function addCourse(array $data)
+    {
+
+        return DB::transaction(function () use ($data) {
+            $image = $data['image'] ?? null;
+            if (!$image) {
+                throw new \Exception("Course image is required");
+            }
+
+            $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+            Storage::disk('supabase')->put($imageName, file_get_contents($image));
+            $imageUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
 
             $course = Course::create([
                 'user_id' => Arr::get($data, 'user_id'),
                 'title'      => Arr::get($data, 'title'),
-                'description'=> Arr::get($data, 'description'),
+                'description' => Arr::get($data, 'description'),
                 'price'      => Arr::get($data, 'price'),
                 'image'      =>  $imageUrl,
             ]);
 
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-$videoFile = $videoData['video'] ?? null;
-if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
-    throw new \Exception("Video file is required for '{$videoData['title']}'");
-}
-                  $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+                $videoFile = $videoData['video'] ?? null;
+                if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
+                    throw new \Exception("Video file is required for '{$videoData['title']}'");
+                }
+              if (!$videoFile instanceof \Illuminate\Http\UploadedFile) {
+                throw new \Exception("Video file is required for '{$videoData['title']}'");
+            }
+
+            $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
             Storage::disk('supabase')->put($videoName, file_get_contents($videoFile));
             $videoUrl = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
 
-// حساب المدة باستخدام getID3
-$getID3 = new \getID3;
+            // مدة الفيديو
+            $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
             $durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
-
-                $video = Video::create([
+      $video = Video::create([
                     'course_id'   => $course->id,
                     'title'       => Arr::get($videoData, 'title'),
-                        'description' => Arr::get($videoData, 'description'), 
+                    'description' => Arr::get($videoData, 'description'),
                     'video_path'  => $videoUrl,
-               'duration'    => $durationSeconds,
+                    'duration'    => $durationSeconds,
                 ]);
 
                 $content = CourseContent::create([
                     'course_id'       => $course->id,
                     'contentable_id'  => $video->id,
-                    'contentable_type'=> Video::class,
+                    'contentable_type' => Video::class,
                 ]);
 
                 if ($quizData = Arr::get($videoData, 'quiz')) {
                     $quiz = Quiz::create([
                         'course_id' => $course->id,
-                        'content_id'=> $content->id,
+                        'content_id' => $content->id,
                         'title'     => Arr::get($quizData, 'title'),
                         'type'      => 'lesson',
                     ]);
@@ -91,18 +98,18 @@ $getID3 = new \getID3;
                     }
                 }
             }
-      
+
             return ['message' => 'course add successfully'];
         });
     }
-  
-      /**
+
+    /**
      * Update an existing course with videos and quizzes
      */
-    
-      public function updateCourse(int $courseId, array $data)
+
+    public function updateCourse(int $courseId, array $data)
     {
-        return DB::transaction(function() use ($courseId, $data) {
+        return DB::transaction(function () use ($courseId, $data) {
 
             $course = Course::findOrFail($courseId);
 
@@ -129,7 +136,7 @@ $getID3 = new \getID3;
                 // تعديل فيديو موجود
                 if ($videoId = Arr::get($videoData, 'id')) {
                     $video = Video::findOrFail($videoId);
-                } else { 
+                } else {
                     // إضافة فيديو جديد
                     $video = new Video();
                     $video->course_id = $course->id;
@@ -211,7 +218,7 @@ $getID3 = new \getID3;
             return ['message' => 'course updated successfully'];
         });
     }
-   private function generateFileName($title, $extension)
+    private function generateFileName($title, $extension)
     {
         $slug = Str::slug($title); // laravel-basics
         $timestamp = now()->format('Ymd_His');

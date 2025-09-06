@@ -28,6 +28,15 @@ return response()->json([
     public function addCourse(courseRequest $request){
          $data = $request->validated();
           $data['user_id'] = auth()->id();
+          // مرر كل الملفات للـ service
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image');
+    }
+
+    if ($request->has('videos')) {
+        $data['videos'] = $request->videos; // videos جاي من الفلاتر (مصفوفة)
+    }
+
 $response=$this->myCourseService->addCourse($data);
 return response()->json(
     $response
