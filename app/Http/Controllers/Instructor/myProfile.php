@@ -76,7 +76,7 @@ public function show()
    public function update(User $user,Request $request)
     {
        // $user = Auth::user();
-
+  dd($request->all());
         // التحقق من صحة البيانات
        $request->validate([
             'name'          => 'required|string|max:255',
@@ -85,7 +85,7 @@ public function show()
             'bio'           => 'nullable|string|max:1000',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-        dd($request->all());
+      
 $name = $request->input('name');
 $email = $request->input('email');
 $specialization = $request->input('specialization');
