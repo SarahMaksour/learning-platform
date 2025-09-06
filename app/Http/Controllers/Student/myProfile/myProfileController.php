@@ -97,13 +97,12 @@ public function edit()
         ], 200);
     }
 
-   public function update(User $user,Request $request)
+   public function update(Request $request)
 {
-   // $user =auth()->user();
+    $user =auth()->user();
 
-    $user->name  = $request->input('name', $user->name);
-    $user->email = $request->input('email', $user->email);
-    $user->save(); 
+    // تحديث البيانات مباشرة
+    $user->update($request->only(['name', 'email']));
 
     return response()->json([
         'message' => 'data updated successfully',

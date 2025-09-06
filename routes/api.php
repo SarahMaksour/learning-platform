@@ -76,7 +76,7 @@ Route::post('/courses/{course_id}/review', [CourseReviewsController::class, 'sto
  Route::get('/student/profile', [myProfileController::class, 'edit']);
 
     // تحديث بيانات الطالب
-    Route::put('/student/profile/{user}', [myProfileController::class, 'update']);
+    Route::put('/student/profile', [myProfileController::class, 'update']);
 });
 
 
