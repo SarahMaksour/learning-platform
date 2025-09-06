@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student\myProfile;
 use App\Models\Video;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -84,5 +85,41 @@ public function myFullyCompletedCourses()
     return response()->json(['courses' => $courses], 200);
 }
 
+public function edit()
+    {
+        $user = Auth::user();
 
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ], 200);
+    }
+
+      public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        // التحقق من صحة البيانات
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user->id),
+            ],
+        ]);
+
+        // تحديث البيانات
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'تم تحديث بياناتك بنجاح',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ]
+        ], 200);
+    }
 }
