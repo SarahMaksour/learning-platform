@@ -29,6 +29,7 @@ class MyCourseService
             ->get(['id', 'title', 'price', 'image', 'user_id']);
     }
 
+
     /*public function addCourse(array $data)
     {
 
@@ -123,11 +124,13 @@ public function addCourse(array $data)
         if (!$image instanceof \Illuminate\Http\UploadedFile) {
             throw new \Exception("Course image must be a valid uploaded file");
         }
-$imageUpload = $supabase->uploadImage($image);
+        $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
+
+ $imageUpload = $supabase->uploadImage($image);
 $imageUrl = env('SUPABASE_URL') 
             . "/storage/v1/object/public/" 
             . env('SUPABASE_BUCKET') 
-            . "/" . $image->getClientOriginalName();
+            . "/" . $imageName;
         // ====== إنشاء الكورس ======
         $course = Course::create([
             'user_id' => Arr::get($data, 'user_id'),
@@ -144,11 +147,14 @@ $imageUrl = env('SUPABASE_URL')
                 throw new \Exception("Video file is required for '{$videoData['title']}'");
             }
 
-            $videoUpload = $supabase->uploadImage($videoFile); // نفس الدالة تستخدم للفيديو
-           $videoUrl = env('SUPABASE_URL') 
+           $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
+
+// رفع الفيديو
+$videoUpload = $supabase->uploadImage($videoFile);
+$videoUrl = env('SUPABASE_URL') 
             . "/storage/v1/object/public/" 
             . env('SUPABASE_BUCKET') 
-            . "/" . $videoFile->getClientOriginalName();
+            . "/" . $videoName;
             // ====== حساب مدة الفيديو ======
             $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
