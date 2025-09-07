@@ -30,7 +30,7 @@ class SearchController extends Controller
       'data'=>CourseResource::collection($courses ),
         ],200);
     }*/
-        public function search(Request $request)
+    /*    public function search(Request $request)
 {
     $q = $request->input('q');
 
@@ -49,6 +49,31 @@ class SearchController extends Controller
     return response()->json([
         'data' => CourseResource::collection( $filtered ),
     ]);
+}*/
+public function search(Request $request)
+{
+    $q = trim($request->input('q'));
+
+    if (empty($q)) {
+        return response()->json(['message' => 'يرجى إدخال كلمة البحث'], 400);
+    }
+
+    // البحث باستخدام Scout/TNTSearch
+    $results = Course::search($q)->get();
+
+    // فلترة دقيقة لدعم الكلمات الجزئية والتهجئة المختلفة
+    $filtered = $results->filter(function ($course) use ($q) {
+        $qLower = mb_strtolower($q);
+        $titleLower = mb_strtolower($course->title);
+
+        // البحث عن الكلمة الجزئية
+        return str_contains($titleLower, $qLower);
+    });
+
+    return response()->json([
+        'data' => CourseResource::collection($filtered->values()),
+    ]);
 }
+
 
 }
