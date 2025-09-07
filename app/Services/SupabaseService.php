@@ -20,7 +20,7 @@ class SupabaseService
     $this->bucketName = env('SUPABASE_BUCKET');
   }
 
- public function uploadImage($file, $customName = null)
+/*public function uploadImage($file, $customName = null)
 {
     Log::info("uploading file to supabase: {$file}");
     
@@ -39,6 +39,7 @@ class SupabaseService
         throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
     }
 }
+*/
 
 /*
 public function uploadImage($file, $customName = null, $upsert = true) // default true
@@ -60,8 +61,40 @@ public function uploadImage($file, $customName = null, $upsert = true) // defaul
         throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
     }*/
 
+public function uploadFile($file, $fileName)
+    {
+        Log::info("Uploading file to Supabase: {$fileName}");
 
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->apiKey,
+        ])
+        ->attach('file', $file->get(), $fileName)
+        ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}");
 
+        if ($response->successful()) {
+            return $this->getPublicUrl($fileName);
+        }
+
+        throw new \Exception('Failed to upload file to Supabase: ' . $response->body());
+    }
+ public function getPublicUrl($fileName)
+    {
+        return "{$this->supabaseUrl}/storage/v1/object/public/{$this->bucketName}/{$fileName}";
+    }
+
+public function deleteFile($fileName)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+            ])->delete("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}");
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            Log::error("Failed to delete file from Supabase: " . $e->getMessage());
+            return false;
+        }
+    }
 
 
   public function getSignedUrl($file)

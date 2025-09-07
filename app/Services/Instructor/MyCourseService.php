@@ -17,6 +17,12 @@ use Illuminate\Support\Facades\Storage;
 
 class MyCourseService
 {
+    protected $supabase;
+
+    public function __construct(SupabaseService $supabase)
+    {
+        $this->supabase = $supabase;
+    }
     public function getMyCourse()
     {
         $user = Auth()->user();
@@ -127,7 +133,7 @@ public function addCourse(array $data)
         }
        // توليد اسم فريد للصورة
 $imageName = $this->generateFileName($data['title'], $image->getClientOriginalExtension());
-$imageUpload = $supabase->uploadImage($image, $imageName); // هنا الاسم الفريد
+$imageUpload = $supabase->uploadFile($image, $imageName); // هنا الاسم الفريد
 $imageUrl = env('SUPABASE_URL') 
             . "/storage/v1/object/public/" 
             . env('SUPABASE_BUCKET') 
@@ -150,14 +156,14 @@ $imageUrl = env('SUPABASE_URL')
             }
 
           $videoName = $this->generateFileName($videoData['title'], $videoFile->getClientOriginalExtension());
-$videoUpload = $supabase->uploadImage($videoFile, $videoName); // الاسم الفريد
+$videoUpload = $supabase->uploadFile($videoFile, $videoName); // الاسم الفريد
 $videoUrl = env('SUPABASE_URL') 
             . "/storage/v1/object/public/" 
             . env('SUPABASE_BUCKET') 
             . "/" . $videoName;
 
             // ====== حساب مدة الفيديو ======
-            $getID3 = new getID3;
+            $getID3 = new \getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
             $durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
 
@@ -200,54 +206,37 @@ $videoUrl = env('SUPABASE_URL')
         return ['message' => 'course added successfully'];
     });
 }
-   public function updateCourse(int $courseId, array $data)
+  public function updateCourse(int $courseId, array $data)
     {
-      
-         $supabase = new SupabaseService();
-
-        return DB::transaction(function () use ($courseId, $data, $supabase) {
-
+        return DB::transaction(function () use ($courseId, $data) {
             $course = Course::findOrFail($courseId);
 
-            // تحديث بيانات الكورس
+            // 1️⃣ تحديث بيانات الكورس
             foreach (['title', 'description', 'price'] as $field) {
                 if (Arr::has($data, $field)) {
                     $course->$field = $data[$field];
                 }
             }
 
-          // تحديث صورة الكورس إذا موجودة
-        if ($image = Arr::get($data, 'image')) {
-            $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
-           // حذف الصورة القديمة أولًا إذا موجودة
-    if ($course->image) {
-        $oldImageName = basename($course->image); // استخراج اسم الملف فقط
-        $supabase->deleteImage($oldImageName);
-    }
+            // 2️⃣ تحديث صورة الكورس
+            if ($image = Arr::get($data, 'image')) {
+                $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
 
-    // رفع الصورة الجديدة
-$supabase->uploadImage($image, $imageName);
-    // تحديث رابط الصورة بالكورس
-    $course->image = env('SUPABASE_URL') 
-                     . "/storage/v1/object/public/" 
-                     . env('SUPABASE_BUCKET') 
-                     . "/" . $imageName;
-}
+                if ($course->image) {
+                    $oldFile = basename($course->image);
+                    $this->supabase->deleteFile($oldFile);
+                }
+
+                $course->image = $this->supabase->uploadFile($image, $imageName);
+            }
 
             $course->save();
 
-            // معالجة الفيديوهات
+            // 3️⃣ تحديث الفيديوهات
             foreach (Arr::get($data, 'videos', []) as $videoData) {
-                $video = null;
-
-                // تعديل فيديو موجود
-                if ($videoId = Arr::get($videoData, 'id')) {
-                    $video = Video::findOrFail($videoId);
-                } else {
-                    // إضافة فيديو جديد
-                    $video = new Video();
-                    $video->course_id = $course->id;
-                }
+                $video = Arr::get($videoData, 'id')
+                    ? Video::findOrFail($videoData['id'])
+                    : new Video(['course_id' => $course->id]);
 
                 foreach (['title', 'description'] as $field) {
                     if (Arr::has($videoData, $field)) {
@@ -255,50 +244,37 @@ $supabase->uploadImage($image, $imageName);
                     }
                 }
 
-                  // تحديث أو إضافة ملف الفيديو
-            if ($videoFile = Arr::get($videoData, 'video')) {
-                $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
-                
-        // حذف الفيديو القديم من Supabase إذا موجود
-        if ($video->video_path) {
-            $oldVideoName = basename($video->video_path);
-            $supabase->deleteImage($oldVideoName);
-        }
+                if ($videoFile = Arr::get($videoData, 'video')) {
+                    $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
 
-        // رفع الفيديو الجديد
-$supabase->uploadImage($videoFile, $videoName);
+                    if ($video->video_path) {
+                        $oldFile = basename($video->video_path);
+                        $this->supabase->deleteFile($oldFile);
+                    }
 
-        // رابط الفيديو الجديد
-        $video->video_path = env('SUPABASE_URL') 
-                             . "/storage/v1/object/public/" 
-                             . env('SUPABASE_BUCKET') 
-                             . "/" . $videoName;
-    }
+                    $video->video_path = $this->supabase->uploadFile($videoFile, $videoName);
+                }
 
                 $video->save();
 
-                // ربط الفيديو بالمحتوى إذا جديد
-                if (!CourseContent::where('contentable_id', $video->id)->exists()) {
-                    CourseContent::create([
-                        'course_id' => $course->id,
-                        'contentable_id' => $video->id,
-                        'contentable_type' => Video::class,
-                    ]);
-                }
+                // ربط الفيديو بالمحتوى
+                CourseContent::firstOrCreate([
+                    'course_id'        => $course->id,
+                    'contentable_id'   => $video->id,
+                    'contentable_type' => Video::class,
+                ]);
 
-                // معالجة الكويزات
+                // 4️⃣ تحديث الكويز
                 if ($quizData = Arr::get($videoData, 'quiz')) {
-                    $quiz = null;
-
-                    // تعديل كويز موجود
-                    if ($quizId = Arr::get($quizData, 'id')) {
-                        $quiz = Quiz::findOrFail($quizId);
-                    } else { // إضافة كويز جديد
-                        $quiz = new Quiz();
-                        $quiz->course_id = $course->id;
-                        $quiz->content_id = CourseContent::where('contentable_id', $video->id)->first()->id;
-                        $quiz->type = 'lesson';
-                    }
+                    $quiz = Arr::get($quizData, 'id')
+                        ? Quiz::findOrFail($quizData['id'])
+                        : new Quiz([
+                            'course_id' => $course->id,
+                            'content_id' => CourseContent::where('contentable_id', $video->id)
+                                ->where('contentable_type', Video::class)
+                                ->first()->id,
+                            'type' => 'lesson',
+                        ]);
 
                     if (Arr::has($quizData, 'title')) {
                         $quiz->title = $quizData['title'];
@@ -306,26 +282,18 @@ $supabase->uploadImage($videoFile, $videoName);
 
                     $quiz->save();
 
-                    // معالجة الأسئلة
+                    // 5️⃣ تحديث الأسئلة
                     foreach (Arr::get($quizData, 'questions', []) as $qData) {
-                        $question = null;
-
-                        // تعديل سؤال موجود
-                        if ($qId = Arr::get($qData, 'id')) {
-                            $question = Question::findOrFail($qId);
-                        } else { // إضافة سؤال جديد
-                            $question = new Question();
-                            $question->quiz_id = $quiz->id;
-                        }
+                        $question = Arr::get($qData, 'id')
+                            ? Question::findOrFail($qData['id'])
+                            : new Question(['quiz_id' => $quiz->id]);
 
                         if (Arr::has($qData, 'text')) {
                             $question->text = $qData['text'];
                         }
-
                         if (Arr::has($qData, 'options')) {
-                            $question->option = json_encode($qData['options']);
+                            $question->options = json_encode($qData['options']);
                         }
-
                         if (Arr::has($qData, 'correct_answer')) {
                             $question->correct_answer = $qData['correct_answer'];
                         }
@@ -335,9 +303,11 @@ $supabase->uploadImage($videoFile, $videoName);
                 }
             }
 
-            return ['message' => 'course updated successfully'];
+            return ['message' => 'Course updated successfully'];
         });
     }
+
+
  /*       public function updateCourse(int $courseId, array $data)
 {
     $supabase = new SupabaseService();
