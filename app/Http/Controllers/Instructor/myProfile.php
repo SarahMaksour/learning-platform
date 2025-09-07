@@ -186,10 +186,9 @@ if (!$userDetail) {
             'id'=>$user->id,
             'user_name' => $user->name,  
             'email'     => $user->email,  
-            'image'     => $user->userDetail && $user->userDetail->image  
-                                ? asset('/' . $user->userDetail->image)  
-                                : null,  
+         //   'image'     => $user->userDetail && $user->userDetail->image  ? asset('/' . $user->userDetail->image)  : null,  
   //      'image_course' =>$user->userDetail->image? asset($this->image) : null,
+  'image' => $detail->image ?? null,
 'specialization'=> $user->UserDetail->specialization,
             'bio'           =>  $user->UserDetail->bio,
            
