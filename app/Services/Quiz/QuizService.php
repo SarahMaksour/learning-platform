@@ -163,29 +163,28 @@ $isCorrect = trim(strtolower($question->correct_answer)) === trim(strtolower($st
     public function updatePlacementAttempt($quizId, $score)
     {
         $status = $score >= 60 ? 'passed' : 'failed';
-        if ($status === 'passed') {
-            $quiz = Quiz::find($quizId);
-if (!$quiz) {
-    // يمكن تسجيل اللوج أو تجاهل بدون exception
-    return;
-}
-$lesson = $quiz->content;
-if (!$lesson) {
-    return;
-}
-           // $lesson = CourseContent::where('quiz_id', $quizId)->first();
-            if ($lesson) {
-                StudentLessonProgress::updateOrCreate(
-                    [
-                        'user_id' => Auth::id(),
-                        'content_id' => $lesson->id,
-                    ],
-                    [
-                        'is_passed' => true,
-                        'score' => $score,
-                    ]
-                );
-            }
-        }
+
+    $quiz = Quiz::find($quizId);
+    if (!$quiz) {
+        return;
+    }
+
+    $lesson = $quiz->content;
+    if (!$lesson) {
+        return;
+    }
+
+    // تحديث أو إنشاء التقدّم، بغض النظر عن النتيجة
+    StudentLessonProgress::updateOrCreate(
+        [
+            'user_id' => Auth::id(),
+            'content_id' => $lesson->id,
+        ],
+        [
+            'is_passed' => $status === 'passed',
+            'score'     => $score,
+        ]
+    );
+            
     }
 }
