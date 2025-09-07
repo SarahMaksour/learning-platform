@@ -181,7 +181,7 @@ if (!$userDetail) {
           public function showProfile()  
     {  
         $user = Auth::user();  
-
+$detail = $user->userDetail;
         return response()->json([  
             'id'=>$user->id,
             'user_name' => $user->name,  
