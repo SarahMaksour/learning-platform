@@ -28,7 +28,7 @@ class CourseReviewsController extends Controller
     }
 
    
-  public function store(Request $request, $course_id)
+ /* public function store(Request $request, $course_id)
 {
     $user = auth()->user();
     $course = Course::findOrFail($course_id);
@@ -85,6 +85,58 @@ class CourseReviewsController extends Controller
 
     return response()->json([
         'message' => 'Your rating has been submitted successfully.'  ],201);
+}
+*/
+public function store(Request $request, $course_id)
+{
+    $user = auth()->user();
+    $course = Course::findOrFail($course_id);
+
+    // جلب كل محتويات الكورس من نوع فيديو
+    $videoContents = $course->contents()->where('contentable_type', \App\Models\Video::class)->get();
+
+    // التحقق من اجتياز كل الدروس وكل الكويزات المرتبطة بها
+    $allVideosCompleted = $videoContents->every(function($content) use ($user) {
+        $videoPassed = $content->isPassedByUser($user);
+
+        if ($quiz = $content->quiz) {
+            $quizPassed = $quiz->placementAttempts()
+                ->where('user_id', $user->id)
+                ->where('status', 'passed')
+                ->exists();
+            return $videoPassed && $quizPassed;
+        }
+
+        return $videoPassed;
+    });
+
+    if (!$allVideosCompleted) {
+        return response()->json([
+            'message' => 'You cannot rate this course because you have not completed all lessons and quizzes.'
+        ], 403);
+    }
+
+    // التحقق من صحة البيانات
+    $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    // حفظ أو تحديث الريفيو
+    Review::updateOrCreate(
+        [
+            'user_id' => $user->id,
+            'course_id' => $course->id,
+        ],
+        [
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]
+    );
+
+    return response()->json([
+        'message' => 'Your rating has been submitted successfully.'
+    ], 201);
 }
 
 }
