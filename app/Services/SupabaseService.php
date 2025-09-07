@@ -41,19 +41,22 @@ class SupabaseService
 }
 
 */
-public function uploadImage($file, $customName = null)
+public function uploadImage($file, $customName = null, $upsert = false)
 {
     Log::info("uploading file to supabase: {$file}");
     
-    // إذا تم تمرير اسم مخصص استخدمه، وإلا استخدم الاسم الأصلي
     $filepath = $customName ?? $file->getClientOriginalName();
+    $url = "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}";
+
+    if ($upsert) {
+        $url .= "?upsert=true"; // إذا تريد الاستبدال
+    }
 
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $this->apiKey,
     ])
     ->attach('file', $file->get(), $filepath)
-    ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}?upsert=true");
-    // لاحظ: ?upsert=true → إذا الملف موجود رح ينعمل له استبدال بدل ما يعطي 409
+    ->post($url);
 
     if ($response->successful()) {
         return $response->json();
@@ -61,6 +64,7 @@ public function uploadImage($file, $customName = null)
         throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
     }
 }
+
 
 
   public function getSignedUrl($file)
