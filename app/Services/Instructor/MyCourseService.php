@@ -226,8 +226,7 @@ $videoUrl = env('SUPABASE_URL')
     }
 
     // رفع الصورة الجديدة
-    $supabase->uploadImage($image);
-
+$supabase->uploadImage($image, $imageName);
     // تحديث رابط الصورة بالكورس
     $course->image = env('SUPABASE_URL') 
                      . "/storage/v1/object/public/" 
@@ -267,7 +266,7 @@ $videoUrl = env('SUPABASE_URL')
         }
 
         // رفع الفيديو الجديد
-        $supabase->uploadImage($videoFile);
+$supabase->uploadImage($videoFile, $videoName);
 
         // رابط الفيديو الجديد
         $video->video_path = env('SUPABASE_URL') 
