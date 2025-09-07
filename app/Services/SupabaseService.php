@@ -41,16 +41,12 @@ class SupabaseService
 }
 
 */
-public function uploadImage($file, $customName = null, $upsert = false)
+public function uploadImage($file, $customName = null, $upsert = true) // default true
 {
     Log::info("uploading file to supabase: {$file}");
     
     $filepath = $customName ?? $file->getClientOriginalName();
-    $url = "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}";
-
-    if ($upsert) {
-        $url .= "?upsert=true"; // إذا تريد الاستبدال
-    }
+    $url = "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}?upsert={$upsert}";
 
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $this->apiKey,
@@ -64,6 +60,7 @@ public function uploadImage($file, $customName = null, $upsert = false)
         throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
     }
 }
+
 
 
 
