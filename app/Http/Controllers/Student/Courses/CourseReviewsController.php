@@ -92,32 +92,37 @@ public function store(Request $request, $course_id)
     $user = auth()->user();
     $course = Course::findOrFail($course_id);
 
-    // جلب كل محتويات الكورس من نوع فيديو
-    $videoContents = $course->contents()->where('contentable_type', \App\Models\Video::class)->get();
+    // جلب كل محتويات الفيديوهات مع كويزاتها
+    $videoContents = $course->contents()
+        ->where('contentable_type', \App\Models\Video::class)
+        ->with('quiz.placementAttempts')
+        ->get();
 
-    // التحقق من اجتياز كل الدروس وكل الكويزات المرتبطة بها
-    $allVideosCompleted = $videoContents->every(function($content) use ($user) {
+    // التحقق من اكتمال كل فيديو وكل كويز مرتبط
+    $allCompleted = $videoContents->every(function ($content) use ($user) {
+        // تحقق من اجتياز الفيديو
         $videoPassed = $content->isPassedByUser($user);
 
-        if ($quiz = $content->quiz) {
-            $quizPassed = $quiz->placementAttempts()
+        // تحقق من الكويز المرتبط إن وجد
+        $quizPassed = true;
+        if ($content->quiz) {
+            $quizPassed = $content->quiz->placementAttempts
                 ->where('user_id', $user->id)
-                ->where('status', 'passed')
-                ->exists();
-            return $videoPassed && $quizPassed;
+                ->where('score', '>=', 50) // معيار النجاح
+                ->count() > 0;
         }
 
-        return $videoPassed;
+        return $videoPassed && $quizPassed;
     });
 
-    if (!$allVideosCompleted) {
+    if (!$allCompleted) {
         return response()->json([
             'message' => 'You cannot rate this course because you have not completed all lessons and quizzes.'
         ], 403);
     }
 
-    // التحقق من صحة البيانات
-    $request->validate([
+    // تحقق من صحة البيانات
+    $validated = $request->validate([
         'rating' => 'required|integer|min:1|max:5',
         'comment' => 'nullable|string|max:1000',
     ]);
@@ -128,15 +133,13 @@ public function store(Request $request, $course_id)
             'user_id' => $user->id,
             'course_id' => $course->id,
         ],
-        [
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]
+        $validated
     );
 
     return response()->json([
         'message' => 'Your rating has been submitted successfully.'
     ], 201);
 }
+
 
 }
