@@ -20,7 +20,7 @@ class SupabaseService
     $this->bucketName = env('SUPABASE_BUCKET');
   }
 
- public function uploadImage($file, $customName = null)
+/* public function uploadImage($file, $customName = null)
 {
     Log::info("uploading file to supabase: {$file}");
     
@@ -32,6 +32,28 @@ class SupabaseService
     ])
     ->attach('file', $file->get(), $filepath)
     ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}");
+
+    if ($response->successful()) {
+        return $response->json();
+    } else {
+        throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
+    }
+}
+
+*/
+public function uploadImage($file, $customName = null)
+{
+    Log::info("uploading file to supabase: {$file}");
+    
+    // إذا تم تمرير اسم مخصص استخدمه، وإلا استخدم الاسم الأصلي
+    $filepath = $customName ?? $file->getClientOriginalName();
+
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $this->apiKey,
+    ])
+    ->attach('file', $file->get(), $filepath)
+    ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$filepath}?upsert=true");
+    // لاحظ: ?upsert=true → إذا الملف موجود رح ينعمل له استبدال بدل ما يعطي 409
 
     if ($response->successful()) {
         return $response->json();

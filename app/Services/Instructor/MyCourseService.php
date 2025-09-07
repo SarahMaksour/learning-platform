@@ -2,6 +2,7 @@
 
 namespace App\Services\Instructor;
 
+use getID3;
 use App\Models\Quiz;
 use App\Models\Video;
 use App\Models\Course;
@@ -156,7 +157,7 @@ $videoUrl = env('SUPABASE_URL')
             . "/" . $videoName;
 
             // ====== حساب مدة الفيديو ======
-            $getID3 = new \getID3;
+            $getID3 = new getID3;
             $fileInfo = $getID3->analyze($videoFile->getPathname());
             $durationSeconds = isset($fileInfo['playtime_seconds']) ? (int) round($fileInfo['playtime_seconds']) : 0;
 
