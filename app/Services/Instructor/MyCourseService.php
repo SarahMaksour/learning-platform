@@ -201,9 +201,10 @@ $videoUrl = env('SUPABASE_URL')
 }
     public function updateCourse(int $courseId, array $data)
     {
-        $supabase = new \App\Services\SupabaseService();
+      
+         $supabase = new SupabaseService();
 
-        return DB::transaction(function () use ($courseId, $data) {
+        return DB::transaction(function () use ($courseId, $data, $supabase) {
 
             $course = Course::findOrFail($courseId);
 
