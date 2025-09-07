@@ -354,27 +354,19 @@ $supabase->uploadImage($videoFile, $videoName);
         }
 
         // تحديث صورة الكورس إذا موجودة
-        if ($image = Arr::get($data, 'image')) {
-            if ($course->image) {
-                // استخرج اسم الملف القديم من الرابط
-                $oldImageName = basename(parse_url($course->image, PHP_URL_PATH));
+       if ($image = Arr::get($data, 'image')) {
+    if ($course->image) {
+        $oldImageName = basename(parse_url($course->image, PHP_URL_PATH));
+        $supabase->uploadImage($image, $oldImageName, true); // استبدال الملف القديم
+        $imageName = $oldImageName;
+    } else {
+        $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
+        $supabase->uploadImage($image, $imageName, true);
+    }
 
-                // استبدل الملف بنفس الاسم
-                $supabase->uploadImage($image, $oldImageName);
+    $course->image = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $imageName;
+}
 
-                $imageName = $oldImageName;
-            } else {
-                // إذا جديد → اعمل اسم جديد
-                $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
-                $supabase->uploadImage($image, $imageName);
-            }
-
-            // حدّث الرابط
-            $course->image = env('SUPABASE_URL')
-                         . "/storage/v1/object/public/"
-                         . env('SUPABASE_BUCKET')
-                         . "/" . $imageName;
-        }
 
         $course->save();
 
@@ -398,27 +390,19 @@ $supabase->uploadImage($videoFile, $videoName);
             }
 
             // تحديث أو إضافة ملف الفيديو
-            if ($videoFile = Arr::get($videoData, 'video')) {
-                if ($video->video_path) {
-                    // استخرج اسم الملف القديم
-                    $oldVideoName = basename(parse_url($video->video_path, PHP_URL_PATH));
+           if ($videoFile = Arr::get($videoData, 'video')) {
+    if ($video->video_path) {
+        $oldVideoName = basename(parse_url($video->video_path, PHP_URL_PATH));
+        $supabase->uploadImage($videoFile, $oldVideoName, true);
+        $videoName = $oldVideoName;
+    } else {
+        $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
+        $supabase->uploadImage($videoFile, $videoName, true);
+    }
 
-                    // استبدل الملف بنفس الاسم
-                    $supabase->uploadImage($videoFile, $oldVideoName);
+    $video->video_path = env('SUPABASE_URL') . "/storage/v1/object/public/" . env('SUPABASE_BUCKET') . "/" . $videoName;
+}
 
-                    $videoName = $oldVideoName;
-                } else {
-                    // إذا جديد → اعمل اسم جديد
-                    $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
-                    $supabase->uploadImage($videoFile, $videoName);
-                }
-
-                // حدّث الرابط
-                $video->video_path = env('SUPABASE_URL')
-                                   . "/storage/v1/object/public/"
-                                   . env('SUPABASE_BUCKET')
-                                   . "/" . $videoName;
-            }
 
             $video->save();
 
