@@ -114,7 +114,7 @@ class QuizService
                 continue;
        //     $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
  // options تبع السؤال
-        $options = json_decode($question->option, true) ?? [];
+        $options = json_decode($question->options, true) ?? [];
 
         // الجواب اللي وصلني (index على شكل سترينغ)
         $studentIndex = (int) $answer['student_answer'];
@@ -123,6 +123,7 @@ class QuizService
         $studentAnswerText = $options[$studentIndex] ?? null;
 
         if ($studentAnswerText === null) {
+            $incorrectCount++;
             continue; // إهمال لو الطالب بعت index غلط
         }
 
