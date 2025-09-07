@@ -54,7 +54,7 @@ public function myEnrolledCourses()
 }
 
 
-public function myFullyCompletedCourses()
+/*public function myFullyCompletedCourses()
 {
     $user = auth()->user();
 
@@ -88,13 +88,70 @@ public function myFullyCompletedCourses()
             'title'      => $course->title,
             'image'      => $course->image, // تأكد إنه عندك accessor أو full path
             'instructor' => $course->instructor->name ?? '',
-        //    'progress'   => $course->progress ?? 0, // إذا عندك حسبة progress
+            'progress'   => $course->progress ?? 0, // إذا عندك حسبة progress
         ];
     })
     ->values();
 
     return response()->json(['courses' => $courses], 200);
 }
+*/
+public function myFullyCompletedCourses()
+{
+    $user = auth()->user();
+
+    $courses = Course::whereHas('enrollments', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })
+        ->with(['instructor', 'contents.contentable', 'contents.quiz.placementAttempts'])
+        ->get()
+        ->map(function ($course) use ($user) {
+            // جميع الفيديوهات
+            $videos = $course->contents
+                ->where('contentable_type', \App\Models\Video::class);
+
+            $totalVideos = $videos->count();
+            $completedVideos = $videos->filter(fn($content) => $content->isPassedByUser($user))->count();
+
+            // حساب progress كنسبة مئوية
+            $progress = $totalVideos ? round(($completedVideos / $totalVideos) * 100, 2) : 0;
+
+            // تحقق من آخر درس
+            $lastVideo = $videos->sortByDesc('id')->first();
+            $videoPassed = $lastVideo ? $lastVideo->isPassedByUser($user) : true;
+
+            // تحقق من آخر كويز (اختياري)
+            $lastQuiz = $course->contents
+                ->pluck('quiz')
+                ->filter()
+                ->sortByDesc('id')
+                ->first();
+
+            $quizPassed = $lastQuiz
+                ? $lastQuiz->placementAttempts()
+                    ->where('user_id', $user->id)
+                    ->where('score', '>=', 50)
+                    ->exists()
+                : true;
+
+            // يعتبر الكورس مكتمل إذا انتهى آخر درس ونجح آخر كويز
+            $isCompleted = $videoPassed && $quizPassed;
+
+            return [
+                'id' => $course->id,
+                'title' => $course->title,
+                'image' => $course->image, // رابط Supabase
+                'instructor' => $course->instructor->name ?? '',
+                'progress' => $progress,
+              //  'completed' => $isCompleted,
+            ];
+        })
+        ->filter(fn($course) => $course['completed']) // فقط الكورسات المكتملة
+        ->values();
+
+    return response()->json(['courses' => $courses], 200);
+}
+
 
 public function edit()
     {

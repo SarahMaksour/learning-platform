@@ -15,7 +15,8 @@ class ViewAllController extends Controller
     public function __construct(ViewAllService $viewAllService){
         $this->viewAllService=$viewAllService;
 
-    } public function homePage(Request $request)
+    } 
+    public function homePage(Request $request)
     {
         $type = $request->query('type');
 
