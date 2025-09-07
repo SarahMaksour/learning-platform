@@ -218,16 +218,21 @@ $videoUrl = env('SUPABASE_URL')
           // تحديث صورة الكورس إذا موجودة
         if ($image = Arr::get($data, 'image')) {
             $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
-            
-            // رفع الصورة على Supabase
-            $supabase->uploadImage($image);
+           // حذف الصورة القديمة أولًا إذا موجودة
+    if ($course->image) {
+        $oldImageName = basename($course->image); // استخراج اسم الملف فقط
+        $supabase->deleteImage($oldImageName);
+    }
 
-            // رابط الصورة العام
-            $course->image = env('SUPABASE_URL') 
-                            . "/storage/v1/object/public/" 
-                            . env('SUPABASE_BUCKET') 
-                            . "/" . $imageName;
-        }
+    // رفع الصورة الجديدة
+    $supabase->uploadImage($image);
+
+    // تحديث رابط الصورة بالكورس
+    $course->image = env('SUPABASE_URL') 
+                     . "/storage/v1/object/public/" 
+                     . env('SUPABASE_BUCKET') 
+                     . "/" . $imageName;
+}
 
             $course->save();
 
@@ -254,16 +259,21 @@ $videoUrl = env('SUPABASE_URL')
             if ($videoFile = Arr::get($videoData, 'video')) {
                 $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
                 
-                // رفع الفيديو على Supabase
-                $supabase->uploadImage($videoFile);
+        // حذف الفيديو القديم من Supabase إذا موجود
+        if ($video->video_path) {
+            $oldVideoName = basename($video->video_path);
+            $supabase->deleteImage($oldVideoName);
+        }
 
-                // رابط الفيديو العام
-                $video->video_path = env('SUPABASE_URL') 
-                                   . "/storage/v1/object/public/" 
-                                   . env('SUPABASE_BUCKET') 
-                                   . "/" . $videoName;
+        // رفع الفيديو الجديد
+        $supabase->uploadImage($videoFile);
 
-            }
+        // رابط الفيديو الجديد
+        $video->video_path = env('SUPABASE_URL') 
+                             . "/storage/v1/object/public/" 
+                             . env('SUPABASE_BUCKET') 
+                             . "/" . $videoName;
+    }
 
                 $video->save();
 

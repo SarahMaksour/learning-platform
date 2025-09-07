@@ -66,4 +66,15 @@ class SupabaseService
       throw new \Exception('Failed to retrieve signed URL from Supabase: ' . $response->body());
     }
   }
+  public function deleteImage(string $fileName)
+{
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $this->apiKey,
+    ])->delete("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}");
+
+    if (!$response->successful()) {
+        throw new \Exception('Failed to delete image from Supabase: ' . $response->body());
+    }
+}
+
 }
