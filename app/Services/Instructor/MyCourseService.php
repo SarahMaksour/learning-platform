@@ -201,6 +201,8 @@ $videoUrl = env('SUPABASE_URL')
 }
     public function updateCourse(int $courseId, array $data)
     {
+        $supabase = new \App\Services\SupabaseService();
+
         return DB::transaction(function () use ($courseId, $data) {
 
             $course = Course::findOrFail($courseId);
@@ -212,12 +214,19 @@ $videoUrl = env('SUPABASE_URL')
                 }
             }
 
-            // تحديث صورة الكورس إذا موجودة
-            if ($image = Arr::get($data, 'image')) {
-                $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
-                $image->move(public_path('images/courses'), $imageName);
-                $course->image = url('images/courses/' . $imageName);
-            }
+          // تحديث صورة الكورس إذا موجودة
+        if ($image = Arr::get($data, 'image')) {
+            $imageName = $this->generateFileName($course->title, $image->getClientOriginalExtension());
+            
+            // رفع الصورة على Supabase
+            $supabase->uploadImage($image);
+
+            // رابط الصورة العام
+            $course->image = env('SUPABASE_URL') 
+                            . "/storage/v1/object/public/" 
+                            . env('SUPABASE_BUCKET') 
+                            . "/" . $imageName;
+        }
 
             $course->save();
 
@@ -240,12 +249,20 @@ $videoUrl = env('SUPABASE_URL')
                     }
                 }
 
-                // تحديث أو إضافة ملف الفيديو
-                if ($videoFile = Arr::get($videoData, 'video')) {
-                    $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
-                    $videoFile->move(public_path('videos'), $videoName);
-                    $video->video_path = url('videos/' . $videoName);
-                }
+                  // تحديث أو إضافة ملف الفيديو
+            if ($videoFile = Arr::get($videoData, 'video')) {
+                $videoName = $this->generateFileName($video->title, $videoFile->getClientOriginalExtension());
+                
+                // رفع الفيديو على Supabase
+                $supabase->uploadImage($videoFile);
+
+                // رابط الفيديو العام
+                $video->video_path = env('SUPABASE_URL') 
+                                   . "/storage/v1/object/public/" 
+                                   . env('SUPABASE_BUCKET') 
+                                   . "/" . $videoName;
+
+            }
 
                 $video->save();
 
