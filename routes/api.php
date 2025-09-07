@@ -41,7 +41,6 @@ Route::post('login', [AuthController::class,'login']);
 Route::post('logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')
 ->group(function () {
-Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('role',[RoleController::class ,'setRole']);
 Route::get('/filter',[FilterController::class ,'filterCourses']);
 Route::get('/courses/{id}/status',[CourseDetailsController::class,'checkCourseStatus']);
@@ -81,7 +80,7 @@ Route::post('/courses/{course_id}/review', [CourseReviewsController::class, 'sto
 });
 
 
-
+Route::get('/viewAllCourses' ,[viewAllController::class,'homePage']);
 Route::post('/image', [CourseController::class, 'testUpload']);
 Route::get('/home', [HomeController::class, 'homePage']);
 Route::get('search',[SearchController::class ,'search']);
