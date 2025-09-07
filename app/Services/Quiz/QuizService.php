@@ -100,66 +100,63 @@ class QuizService
             'questions' => $formattedQuestions
         ];
     }
-    public function submitQuizAnswer(array $data)
-    {
-        $user_id = Auth::id();
-        $quiz_id = $data['quiz_id'];
-        $answers = $data['answers'];
-        $correctCount = 0;
-        $incorrectCount = 0;
-        foreach ($answers as $answer) {
-            $question = Question::where('id', $answer['question_id'])
-                ->where('quiz_id', $quiz_id)->first();
-            if (!$question)
-                continue;
-       //     $isCorrect = ((string) $question->correct_answer === (string) $answer['student_answer']);
- // options تبع السؤال
-        $options = json_decode($question->options, true) ?? [];
+public function submitQuizAnswer(array $data)
+{
+    $user_id = Auth::id();
+    $quiz_id = $data['quiz_id'];
+    $answers = $data['answers'] ?? [];
 
-        // الجواب اللي وصلني (index على شكل سترينغ)
-        $studentIndex = (int) $answer['student_answer'];
+    $correctCount = 0;
+    $incorrectCount = 0;
 
-        // إذا موجود بالمصفوفة نجيبه نص
+    foreach ($answers as $answer) {
+        $question = Question::where('id', $answer['question_id'])
+            ->where('quiz_id', $quiz_id)
+            ->first();
+
+        if (!$question) continue;
+
+        $options = json_decode($question->option, true) ?? [];
+
+        // correct stored as text
+        $correctText = trim(strtolower($question->correct_answer));
+
+        // student answer index
+        $studentIndex = isset($answer['student_answer']) ? (int) $answer['student_answer'] : null;
         $studentAnswerText = $options[$studentIndex] ?? null;
 
         if ($studentAnswerText === null) {
             $incorrectCount++;
-            continue; // إهمال لو الطالب بعت index غلط
-        }
-
-        // المقارنة: النص مع النص
-$isCorrect = trim(strtolower($question->correct_answer)) === trim(strtolower($studentAnswerText));
-
-            if ($isCorrect) {
-                $correctCount++;
-            } else {
-                $incorrectCount++;
-            }
-
             StudentAnswer::updateOrCreate(
-                [
-                    'user_id' => $user_id,
-                    'question_id' => $question->id,
-                ],
-                [
-                   // 'student_answer' => $answer['student_answer'],
-                   'student_answer' => $studentAnswerText,
-                    'is_correct' => $isCorrect,
-                ]
+                ['user_id' => $user_id, 'question_id' => $question->id],
+                ['student_answer' => null, 'is_correct' => false]
             );
+            continue;
         }
 
-        $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
-        $score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
-        $status = ($score >= 60) ? 'passed' : 'failed';
+        $isCorrect = ($correctText === trim(strtolower($studentAnswerText)));
 
-        return [
-            'score' => $score,
-            'status' => $status,
-            'correctCount' => $correctCount,
-            'incorrectCount' => $incorrectCount
-        ];
+        if ($isCorrect) $correctCount++;
+        else $incorrectCount++;
+
+        StudentAnswer::updateOrCreate(
+            ['user_id' => $user_id, 'question_id' => $question->id],
+            ['student_answer' => $studentAnswerText, 'is_correct' => $isCorrect]
+        );
     }
+
+    $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
+    $score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
+    $status = ($score >= 60) ? 'passed' : 'failed';
+
+    return [
+        'score'         => $score,
+        'status'        => $status,
+        'correctCount'  => $correctCount,
+        'incorrectCount'=> $incorrectCount,
+    ];
+}
+
     public function updatePlacementAttempt($quizId, $score)
     {
         $status = $score >= 60 ? 'passed' : 'failed';

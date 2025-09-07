@@ -193,7 +193,26 @@ $videoUrl = env('SUPABASE_URL')
                 ]);
 
                 foreach (Arr::get($quizData, 'questions', []) as $q) {
-                    Question::create([
+    $options = Arr::get($q, 'options', []);
+    if (!is_array($options)) {
+        $options = json_decode($options, true) ?? [];
+    }
+
+    $rawCorrect = Arr::get($q, 'correct_answer'); // ممكن يكون index أو نص
+    $correctText = null;
+
+    if (is_numeric($rawCorrect)) {
+        $correctIndex = (int) $rawCorrect;
+        $correctText  = $options[$correctIndex] ?? null;
+    } else {
+        $needle = trim((string) $rawCorrect);
+        foreach ($options as $idx => $opt) {
+            if (strcasecmp(trim((string)$opt), $needle) === 0) {
+                $correctText = $opt;
+                break;
+            }
+        }
+    }      Question::create([
                         'quiz_id' => $quiz->id,
                         'text' => Arr::get($q, 'text'),
                         'option' => json_encode(Arr::get($q, 'options', [])),
