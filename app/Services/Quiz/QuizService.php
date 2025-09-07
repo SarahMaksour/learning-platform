@@ -127,7 +127,7 @@ class QuizService
         }
 
         // المقارنة: النص مع النص
-        $isCorrect = ((string) $question->correct_answer === (string) $studentAnswerText);
+$isCorrect = trim(strtolower($question->correct_answer)) === trim(strtolower($studentAnswerText));
 
             if ($isCorrect) {
                 $correctCount++;
