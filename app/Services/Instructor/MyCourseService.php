@@ -200,7 +200,7 @@ $videoUrl = env('SUPABASE_URL')
         return ['message' => 'course added successfully'];
     });
 }
-   /*public function updateCourse(int $courseId, array $data)
+   public function updateCourse(int $courseId, array $data)
     {
       
          $supabase = new SupabaseService();
@@ -337,8 +337,8 @@ $supabase->uploadImage($videoFile, $videoName);
 
             return ['message' => 'course updated successfully'];
         });
-    }*/
-        public function updateCourse(int $courseId, array $data)
+    }
+ /*       public function updateCourse(int $courseId, array $data)
 {
     $supabase = new SupabaseService();
 
@@ -469,7 +469,7 @@ $supabase->uploadImage($videoFile, $videoName);
         return ['message' => 'course updated successfully'];
     });
 }
-
+*/
     private function generateFileName($title, $extension)
     {
         $slug = Str::slug($title); // laravel-basics

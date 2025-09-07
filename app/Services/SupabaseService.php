@@ -20,7 +20,7 @@ class SupabaseService
     $this->bucketName = env('SUPABASE_BUCKET');
   }
 
-/* public function uploadImage($file, $customName = null)
+ public function uploadImage($file, $customName = null)
 {
     Log::info("uploading file to supabase: {$file}");
     
@@ -40,7 +40,7 @@ class SupabaseService
     }
 }
 
-*/
+/*
 public function uploadImage($file, $customName = null, $upsert = true) // default true
 {
     Log::info("uploading file to supabase: {$file}");
@@ -58,8 +58,8 @@ public function uploadImage($file, $customName = null, $upsert = true) // defaul
         return $response->json();
     } else {
         throw new \Exception('Failed to upload image to Supabase: ' . $response->body());
-    }
-}
+    }*/
+
 
 
 
