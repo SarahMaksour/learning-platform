@@ -148,12 +148,19 @@ $isCorrect = trim(strtolower($question->correct_answer)) === trim(strtolower($st
             );
         }
 
-        $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
-        $score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
-        $status = ($score >= 60) ? 'passed' : 'failed';
+       $totalQuestion = Question::where('quiz_id', $quiz_id)->count();
+$answeredQuestions = $correctCount + $incorrectCount; // فقط الأسئلة اللي الطالب جاوب عليها
+
+// حساب السكور بناءً على جميع الأسئلة
+//$score = $totalQuestion > 0 ? round(($correctCount / $totalQuestion) * 100, 2) : 0;
+
+// أو إذا تريد فقط بناءً على الأسئلة اللي جاوب عليها:
+$scoreBasedOnAnswered = $answeredQuestions > 0 ? round(($correctCount / $answeredQuestions) * 100, 2) : 0;
+
+$status = ($$scoreBasedOnAnswered >= 60) ? 'passed' : 'failed';
 
         return [
-            'score' => $score,
+            'score' => $$scoreBasedOnAnswered,
             'status' => $status,
             'correctCount' => $correctCount,
             'incorrectCount' => $incorrectCount
