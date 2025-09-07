@@ -92,25 +92,24 @@ public function store(Request $request, $course_id)
     $user = auth()->user();
     $course = Course::findOrFail($course_id);
 
-    // جلب كل محتويات الفيديوهات مع كويزاتها
+    // جلب كل محتويات الكورس من نوع فيديو
     $videoContents = $course->contents()
         ->where('contentable_type', \App\Models\Video::class)
-        ->with('quiz.placementAttempts')
         ->get();
 
-    // التحقق من اكتمال كل فيديو وكل كويز مرتبط
-    $allCompleted = $videoContents->every(function ($content) use ($user) {
-        // تحقق من اجتياز الفيديو
-        $videoPassed = $content->isPassedByUser($user);
+    // التحقق من اجتياز كل الدروس وكل الكويزات المرتبطة بها باستخدام student_lesson_progress
+    $allCompleted = $videoContents->every(function($content) use ($user) {
+        $progress = \App\Models\StudentLessonProgress::where('user_id', $user->id)
+                        ->where('content_id', $content->id)
+                        ->first();
 
-        // تحقق من الكويز المرتبط إن وجد
-        $quizPassed = true;
-        if ($content->quiz) {
-            $quizPassed = $content->quiz->placementAttempts
-                ->where('user_id', $user->id)
-                ->where('score', '>=', 50) // معيار النجاح
-                ->count() > 0;
-        }
+        if (!$progress) return false; // إذا لا يوجد سجل → غير مكتمل
+
+        // تحقق من اجتياز الدرس
+        $videoPassed = $progress->is_passed;
+
+        // تحقق من الكويز إذا موجود (نجاح إذا الدرجة >= 50)
+        $quizPassed = $content->quiz ? ($progress->score >= 50) : true;
 
         return $videoPassed && $quizPassed;
     });
@@ -121,25 +120,29 @@ public function store(Request $request, $course_id)
         ], 403);
     }
 
-    // تحقق من صحة البيانات
-    $validated = $request->validate([
+    // التحقق من صحة البيانات
+    $request->validate([
         'rating' => 'required|integer|min:1|max:5',
         'comment' => 'nullable|string|max:1000',
     ]);
 
     // حفظ أو تحديث الريفيو
-    Review::updateOrCreate(
+    \App\Models\Review::updateOrCreate(
         [
             'user_id' => $user->id,
             'course_id' => $course->id,
         ],
-        $validated
+        [
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]
     );
 
     return response()->json([
         'message' => 'Your rating has been submitted successfully.'
     ], 201);
 }
+
 
 
 }
