@@ -62,21 +62,23 @@ public function uploadImage($file, $customName = null, $upsert = true) // defaul
     }*/
 
 public function uploadFile($file, $fileName)
-    {
-        Log::info("Uploading file to Supabase: {$fileName}");
+{
+    $response = Http::withHeaders([
+        'apikey'        => $this->apiKey,
+        'Authorization' => 'Bearer ' . $this->apiKey,
+        'Content-Type'  => $file->getMimeType(),
+    ])->post(
+        "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}?upsert=true",
+        file_get_contents($file->getRealPath())
+    );
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
-        ])
-        ->attach('file', $file->get(), $fileName)
-        ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}");
-
-        if ($response->successful()) {
-            return $this->getPublicUrl($fileName);
-        }
-
-        throw new \Exception('Failed to upload file to Supabase: ' . $response->body());
+    if ($response->successful()) {
+        return $this->getPublicUrl($fileName);
     }
+
+    throw new \Exception('Failed to upload file to Supabase: ' . $response->body());
+}
+
  public function getPublicUrl($fileName)
     {
         return "{$this->supabaseUrl}/storage/v1/object/public/{$this->bucketName}/{$fileName}";
