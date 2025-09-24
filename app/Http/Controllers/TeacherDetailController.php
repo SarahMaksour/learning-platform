@@ -91,14 +91,15 @@ public function storeOrUpdate(Request $request)
     );
 
     // Response
-    return response()->json([
-        'message' => 'Profile details saved successfully',
-        'data' => [
-            'specialization' => $detail->specialization,
-            'bio' => $detail->bio,
-            'image_url' => $detail->image,
-        ]
-    ], 200);
+   return response()->json([
+    'message' => 'Profile details saved successfully',
+    'data' => [
+        'specialization' => mb_convert_encoding($detail->specialization, 'UTF-8', 'UTF-8'),
+        'bio' => mb_convert_encoding($detail->bio, 'UTF-8', 'UTF-8'),
+        'image_url' => $detail->image,
+    ]
+], 200, [], JSON_UNESCAPED_UNICODE);
+
 }
 
 }
