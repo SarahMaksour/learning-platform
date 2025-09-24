@@ -67,10 +67,10 @@ public function uploadFile($file, $fileName)
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->apiKey,
-        ])
-        ->attach('file', $file->get(), $fileName)
-        ->post("{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}");
-
+        ])        ->put(
+        "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}",
+        file_get_contents($file->getRealPath())
+    );
         if ($response->successful()) {
             return $this->getPublicUrl($fileName);
         }

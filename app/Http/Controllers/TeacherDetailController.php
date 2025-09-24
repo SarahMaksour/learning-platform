@@ -77,7 +77,7 @@ public function storeOrUpdate(Request $request)
         // ====== رفع الصورة إلى Supabase ======
         $imageFile = $request->file('image');
         $imageName = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
-        $supabase->uploadImage($imageFile, $imageName); // نرفع الصورة
+        $supabase->uploadFile($imageFile, $imageName); // نرفع الصورة
         $imageUrl = env('SUPABASE_URL') 
                     . "/storage/v1/object/public/" 
                     . env('SUPABASE_BUCKET') 
