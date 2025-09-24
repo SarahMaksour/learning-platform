@@ -66,10 +66,12 @@ public function uploadFile($file, $fileName)
     $response = Http::withHeaders([
         'apikey'        => $this->apiKey,
         'Authorization' => 'Bearer ' . $this->apiKey,
-        'Content-Type'  => $file->getMimeType(),
-    ])->post(
-        "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}?upsert=true",
-        file_get_contents($file->getRealPath())
+    ])->attach(
+        'file',                     // اسم الحقل المطلوب من Supabase
+        file_get_contents($file->getRealPath()), // محتوى الملف
+        $fileName                   // اسم الملف
+    )->post(
+        "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$fileName}?upsert=true"
     );
 
     if ($response->successful()) {
@@ -78,6 +80,7 @@ public function uploadFile($file, $fileName)
 
     throw new \Exception('Failed to upload file to Supabase: ' . $response->body());
 }
+
 
  public function getPublicUrl($fileName)
     {
